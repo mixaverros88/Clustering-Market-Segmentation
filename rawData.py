@@ -1,19 +1,17 @@
 import numpy as np
 import pandas as pd
+import seaborn as sns
 import matplotlib.pyplot as plt
-from sklearn import cluster
 from sklearn import metrics
 from sklearn.cluster import KMeans
-import seaborn as sns
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler,MinMaxScaler
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import StandardScaler
 import os
 
-df_columns =["AAGE","AANCSTR1 ","AANCSTR2","AAUGMENT","ABIRTHPL","ACITIZEN","ACLASS","ADEPART","ADISABL1","ADISABL2","AENGLISH","AFERTIL","Age","AHISPAN","AHOUR89","AHOURS","AIMMIGR","AINCOME1","AINCOME2","AINCOME3 ","AINCOME4","AINCOME5","AINCOME6","AINCOME7","AINCOME8 ","AINDUSTR","ALABOR","ALANG1","ALANG2","ALSTWRK","AMARITAL","AMEANS ","AMIGSTAT","AMOBLLIM ","AMOBLTY","ANCSTRY1","ANCSTRY2","AOCCUP","APERCARE","APOWST","ARACE ","ARELAT1","ARIDERS ","ASCHOOL","ASERVPER ","ASEX","ATRAVTME","AVAIL","AVETS1","AWKS89","AWORK89","AYEARSCH","AYRSSERV","CITIZEN","CLASS","DEPART","DISABL1","DISABL2","ENGLISH","Feb-55","FERTIL","HISPANIC","HOUR89","HOURS","IMMIGR","INCOME1","INCOME2","INCOME3","INCOME4 ","INCOME5","INCOME6","INCOME7","INCOME8","INDUSTRY ","KOREAN","LANG1 ","LANG2 ","LOOKING","MARITAL","MAY75880 ","MEANS","MIGPUMA","MIGSTATE","MILITARY","MOBILITY","MOBILLIM","OCCUP","OTHRSERV ","PERSCARE","POB","POVERTY","POWPUMA","POWSTATE ","PWGT1","RACE","RAGECHLD","REARNING","RECTYPE ","RELAT1","RELAT2","REMPLPAR","RIDERS","RLABOR","ROWNCHLD","RPINCOME","RPOB","RRELCHLD","RSPOUSE","RVETSERV","SCHOOL","Sep-80","SERIALNO","SEX","SUBFAM1","SUBFAM2","TMPABSNT","TRAVTIME","VIETNAM","WEEK89","WORK89 ","WORKLWK ","WWII ","YEARSCH","YEARWRK","YRSSERV"]
-missing_values = ["n/a", "na", "--", "?"] # pandas only detect NaN, NA,  n/a and values and empty shell
+df_columns =['AAGE','AANCSTR1 ','AANCSTR2','AAUGMENT','ABIRTHPL','ACITIZEN','ACLASS','ADEPART','ADISABL1','ADISABL2','AENGLISH','AFERTIL','Age','AHISPAN','AHOUR89','AHOURS','AIMMIGR','AINCOME1','AINCOME2','AINCOME3 ','AINCOME4','AINCOME5','AINCOME6','AINCOME7','AINCOME8 ','AINDUSTR','ALABOR','ALANG1','ALANG2','ALSTWRK','AMARITAL','AMEANS ','AMIGSTAT','AMOBLLIM ','AMOBLTY','ANCSTRY1','ANCSTRY2','AOCCUP','APERCARE','APOWST','ARACE ','ARELAT1','ARIDERS ','ASCHOOL','ASERVPER ','ASEX','ATRAVTME','AVAIL','AVETS1','AWKS89','AWORK89','AYEARSCH','AYRSSERV','CITIZEN','CLASS','DEPART','DISABL1','DISABL2','ENGLISH','Feb-55','FERTIL','HISPANIC','HOUR89','HOURS','IMMIGR','INCOME1','INCOME2','INCOME3','INCOME4 ','INCOME5','INCOME6','INCOME7','INCOME8','INDUSTRY ','KOREAN','LANG1 ','LANG2 ','LOOKING','MARITAL','MAY75880 ','MEANS','MIGPUMA','MIGSTATE','MILITARY','MOBILITY','MOBILLIM','OCCUP','OTHRSERV ','PERSCARE','POB','POVERTY','POWPUMA','POWSTATE ','PWGT1','RACE','RAGECHLD','REARNING','RECTYPE ','RELAT1','RELAT2','REMPLPAR','RIDERS','RLABOR','ROWNCHLD','RPINCOME','RPOB','RRELCHLD','RSPOUSE','RVETSERV','SCHOOL','Sep-80','SERIALNO','SEX','SUBFAM1','SUBFAM2','TMPABSNT','TRAVTIME','VIETNAM','WEEK89','WORK89 ','WORKLWK ','WWII ','YEARSCH','YEARWRK','YRSSERV']
+missing_values = ['n/a', 'na', '--', '?'] # pandas only detect NaN, NA,  n/a and values and empty shell
 my_path = os.path.abspath(os.path.dirname(__file__))
-df=pd.read_csv(r''+my_path+'\\data\\USCensus1990raw.data.txt', sep='\t', nrows=200000,na_values=missing_values, names=df_columns)
+df=pd.read_csv(r''+my_path+'\\data\\USCensus1990raw.data.txt', sep='\t', nrows=200000, na_values=missing_values, names=df_columns)
 
 # a. Data description & Visualization that aids the comprehension of the problem.
 # b. Data pre-processing.
@@ -34,7 +32,6 @@ df=pd.read_csv(r''+my_path+'\\data\\USCensus1990raw.data.txt', sep='\t', nrows=2
 # i. Observe finding and draw conclusions.
 # j. Future work: Also include things you might try/consider in the future.
 
-
 # a. Sex
 # b. Number of children
 # c. Education attained
@@ -44,21 +41,70 @@ df=pd.read_csv(r''+my_path+'\\data\\USCensus1990raw.data.txt', sep='\t', nrows=2
 # g. Race
 # h. Immigration year
 
-# Age:12,INCOME1:65,RACE:95,RPOB:105,YEARSCH:122,SCHOOL:109, SEX:112, MARITAL:78, IMMIGR:64, ENGLISH:58
-df =df.iloc[:, [12,65,94,109,122,112,78,64,58]]
+# Visualize Education attained distribution
+sns.countplot(data=df, x=df['YEARSCH'])
+plt.title('Count the distribution of Education attained Categorical Column')
+plt.show()
+
+# Visualize Marital Status distribution
+sns.countplot(data=df, x=df['MARITAL'])
+plt.title('Count the distribution of Marital Status Categorical Column')
+plt.show()
+
+# Visualize Immigration year distribution
+sns.countplot(data=df, x=df['IMMIGR'])
+plt.title('Count the distribution of Immigration year Categorical Column')
+plt.show()
+
+# Visualize English proficiency distribution
+sns.countplot(data=df, x=df['ENGLISH'])
+plt.title('Count the distribution of English proficiency Categorical Column')
+plt.show()
+
+# Visualize Sex distribution
+sns.countplot(data=df, x=df['SEX'])
+plt.title('Count the distribution of males/females where 0:Male 1:Female')
+plt.show()
+
+# Visualize Age distribution
+plt.boxplot(df['Age'].values) 
+plt.title('Visualize Age distribution')
+plt.show()
+
+# Visualize Income distribution
+plt.boxplot(df['INCOME1'].values) 
+plt.title('Visualize INCOME distribution')
+plt.show()
+
+# Detect Outliers
+min_thresold, max_thresold = df.INCOME1.quantile([0.003, 0.990])
+print(min_thresold, max_thresold)
+print(df[df.INCOME1 < min_thresold])
+print(df[df.INCOME1 > max_thresold])
+
+# Remove outliers
+df = df[(df.INCOME1<max_thresold) & (df.INCOME1>min_thresold)]
+
+# Visualize Income distribution
+plt.boxplot(df['INCOME1'].values) 
+plt.title('Visualize INCOME distribution')
+plt.show()
+
+# Data Preprocessing 
+
+# Age:12, INCOME1:65, RACE:94(~40), RPOB:105 (14), YEARSCH:122 (17), SCHOOL:109(4), SEX:112 (2), MARITAL:78(5), IMMIGR:64(11), ENGLISH:58(5)
+df =df.iloc[:, [12,65,122,112,78,64,58]]
 
 # # Transform Categorical Data
-df = pd.get_dummies(df, columns=["RACE"], prefix=["RACE_Type_is"] )
-# df = pd.get_dummies(df, columns=["RPOB"], prefix=["RPOB_Type_is"] )
-df = pd.get_dummies(df, columns=["YEARSCH"], prefix=["YEARSCH_Type_is"] )
-df = pd.get_dummies(df, columns=["SCHOOL"], prefix=["SCHOOL_Type_is"] )
-df = pd.get_dummies(df, columns=["SEX"], prefix=["SEX_Type_is"] )
-df = pd.get_dummies(df, columns=["MARITAL"], prefix=["MARITAL_Type_is"] )
-df = pd.get_dummies(df, columns=["IMMIGR"], prefix=["IMMIGR_Type_is"] )
-df = pd.get_dummies(df, columns=["ENGLISH"], prefix=["ENGLISH_Type_is"] )
+# df = pd.get_dummies(df, columns=['RACE'], prefix=['RACE_Type_is'] )
+# df = pd.get_dummies(df, columns=['RPOB'], prefix=['RPOB_Type_is'] )
+df = pd.get_dummies(df, columns=['YEARSCH'], prefix=['YEARSCH_Type_is'] )
+# df = pd.get_dummies(df, columns=['SCHOOL'], prefix=['SCHOOL_Type_is'] )
+df = pd.get_dummies(df, columns=['SEX'], prefix=['SEX_Type_is'] )
+df = pd.get_dummies(df, columns=['MARITAL'], prefix=['MARITAL_Type_is'] )
+df = pd.get_dummies(df, columns=['IMMIGR'], prefix=['IMMIGR_Type_is'] )
+df = pd.get_dummies(df, columns=['ENGLISH'], prefix=['ENGLISH_Type_is'] )
 print(df)
-
-
 
 # Scale Data
 scaled_features = df.copy()
@@ -71,12 +117,15 @@ pca = PCA()
 pca.fit(X)
 print(pca.explained_variance_ratio_)
 plt.plot(pca.explained_variance_ratio_.cumsum(), marker='o', linestyle='--')
+plt.xlabel('Number of PCA Components')
+plt.ylabel('PCA Explained Variance Ratio %')
+plt.title('PCA Variance Ration')
 plt.show()
 
-pca_breast = PCA(n_components=33)
+pca_breast = PCA(n_components=28)
 principalComponents_breast = pca_breast.fit_transform(X)
 principal_breast_Df = pd.DataFrame(data = principalComponents_breast
-             , columns = ['principal component 1', 'principal component 2', 'principal component 3', 'principal component 4', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5'])
+             , columns = ['principal component 1', 'principal component 2', 'principal component 3', 'principal component 4', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5'])
 
 print('explained_variance_ratio_', pca_breast.explained_variance_ratio_)
 
@@ -86,17 +135,28 @@ plt.xlabel('principal component 1')
 plt.ylabel('principal component 2')
 plt.show()
 
+wcss=[]
+for i in range(1,21):
+    kmeans_pca=KMeans(n_clusters=i,init='k-means++',random_state=200)
+    kmeans_pca.fit(X)
+    wcss.append(kmeans_pca.inertia_)
+
+plt.plot(range(1,21),wcss, marker='o', linestyle ='--')
+plt.xlabel('Number of Clusters')
+plt.ylabel('WCSS')
+plt.title('K-means with PCA clustering')
+plt.show()
+
 # Selecting optimal number of clusters in KMeans
 for i in range(2,10):
-    labels=cluster.KMeans(n_clusters=i,init="k-means++",random_state=200).fit(X).labels_
+    labels=KMeans(n_clusters=i,init='k-means++',random_state=200).fit(X).labels_
     print('Silhouette score for k(clusters): '+str(i)+' is '+str(metrics.silhouette_score(X,labels,metric='euclidean',sample_size=1000,random_state=200)))
-
 
 km = KMeans(n_clusters=4)
 y_predicted = km.fit_predict(principal_breast_Df)
 principal_breast_Df['cluster']=y_predicted
 print(principal_breast_Df.head())
-
+print('principal_breast_Df.shape', principal_breast_Df.shape)
 print(km.cluster_centers_)
 print(km.inertia_)
 
@@ -104,13 +164,14 @@ df1 = principal_breast_Df[principal_breast_Df.cluster==0]
 df2 = principal_breast_Df[principal_breast_Df.cluster==1]
 df3 = principal_breast_Df[principal_breast_Df.cluster==2]
 df4 = principal_breast_Df[principal_breast_Df.cluster==3]
-plt.scatter(df1['principal component 1'],df1['principal component 2'],color='green')
-plt.scatter(df2['principal component 1'],df2['principal component 2'],color='red')
-plt.scatter(df3['principal component 1'],df3['principal component 2'],color='black')
-plt.scatter(df4['principal component 1'],df4['principal component 2'],color='yellow')
+plt.scatter(df1['principal component 1'],df1['principal component 2'],color='green', label='cluster 1')
+plt.scatter(df2['principal component 1'],df2['principal component 2'],color='red', label='cluster 2')
+plt.scatter(df3['principal component 1'],df3['principal component 2'],color='black', label='cluster 3')
+plt.scatter(df4['principal component 1'],df4['principal component 2'],color='yellow', label='cluster 4')
 plt.scatter(km.cluster_centers_[:,0],km.cluster_centers_[:,1],color='purple',marker='*',label='centroid')
 plt.xlabel('Age')
-plt.ylabel('Income ($)')
+plt.ylabel('Income')
+plt.legend()
 plt.show()
 
 new_df = pd.concat([df.reset_index(drop=True), pd.DataFrame(principal_breast_Df)], axis=1)
@@ -124,12 +185,41 @@ df2 = new_df[new_df.cluster==1]
 df3 = new_df[new_df.cluster==2]
 df4 = new_df[new_df.cluster==3]
 
-plt.scatter(df1['Age'],df1['INCOME1'],color='green')
-plt.scatter(df2['Age'],df2['INCOME1'],color='red')
-plt.scatter(df3['Age'],df3['INCOME1'],color='black')
-plt.scatter(df4['Age'],df4['INCOME1'],color='yellow')
+plt.scatter(df1['Age'],df1['INCOME1'],color='green', label='cluster 1')
+plt.scatter(df2['Age'],df2['INCOME1'],color='red', label='cluster 2')
+plt.scatter(df3['Age'],df3['INCOME1'],color='black', label='cluster 3')
+plt.scatter(df4['Age'],df4['INCOME1'],color='yellow', label='cluster 4')
 plt.xlabel('Age')
-plt.ylabel('Income ($)')
+plt.ylabel('Income')
+plt.legend()
+plt.show()
+
+print('principal_breast_Df.shape', principal_breast_Df.shape)
+# Hierarchy 
+import scipy.cluster.hierarchy as sch
+dendrogrm = sch.dendrogram(sch.linkage(principal_breast_Df, method = 'ward'))
+plt.title('Dendrogram')
+plt.xlabel('Customers')
+plt.ylabel('Euclidean distance')
+plt.show()
+
+from sklearn.cluster import AgglomerativeClustering
+hc = AgglomerativeClustering(n_clusters = 4, affinity = 'euclidean', linkage = 'ward')
+y_hc = hc.fit_predict(principal_breast_Df)
+principal_breast_Df = principal_breast_Df.values
+print(y_hc)
+print('X[y_hc == 0, 0]', principal_breast_Df[y_hc == 0, 0])
+print('X[y_hc == 0, 1]', principal_breast_Df[y_hc == 0, 1])
+
+# Visualising the clusters
+plt.scatter(principal_breast_Df[y_hc == 0, 0], principal_breast_Df[y_hc == 0, 1], s = 50, c = 'red', label = 'Careful')
+plt.scatter(principal_breast_Df[y_hc == 1, 0], principal_breast_Df[y_hc == 1, 1], s = 50, c = 'blue', label = 'Standard')
+plt.scatter(principal_breast_Df[y_hc == 2, 0], principal_breast_Df[y_hc == 2, 1], s = 50, c = 'green', label = 'Target')
+plt.scatter(principal_breast_Df[y_hc == 3, 0], principal_breast_Df[y_hc == 3, 1], s = 50, c = 'cyan', label = 'Careless')
+plt.title('Clusters of customers')
+plt.xlabel('Annual Income')
+plt.ylabel('Spending Score')
+plt.legend()
 plt.show()
 
 # print(df['Age'].describe())
@@ -158,7 +248,7 @@ plt.show()
 # # df.drop(['caseid'],axis=1, inplace=True)
 
 # sns.countplot(data=df, x=df['SEX'])
-# plt.title("Count the distribution of males/females where 0:Male 1:Female")
+# plt.title('Count the distribution of males/females where 0:Male 1:Female')
 # plt.show()
 
 
@@ -169,7 +259,7 @@ plt.show()
 
 # # Create bar char
 # plt.bar(x=['MALE','FEMALE'], height=[maleAvgIncome,femaleAvgIncome])
-# plt.title("Average income by SEX")
+# plt.title('Average income by SEX')
 # plt.show()
 
 # # since the list is huge
