@@ -13,6 +13,8 @@ missing_values = ['n/a', 'na', '--', '?'] # pandas only detect NaN, NA,  n/a and
 my_path = os.path.abspath(os.path.dirname(__file__))
 df=pd.read_csv(r''+my_path+'\\data\\USCensus1990raw.data.txt', sep='\t', nrows=200000, na_values=missing_values, names=df_columns)
 
+print(df.shape) #(2458285, 125)  
+
 # a. Data description & Visualization that aids the comprehension of the problem.
 # b. Data pre-processing.
 # c. Data/feature selection/evaluation.
@@ -40,6 +42,119 @@ df=pd.read_csv(r''+my_path+'\\data\\USCensus1990raw.data.txt', sep='\t', nrows=2
 # f. Age
 # g. Race
 # h. Immigration year
+                                                           
+# print( 'Count Insatnces of no allocated column AYEARSCH' ,    (df['AYEARSCH']==0).sum())    # 2351020
+# print( 'Count Insatnces of no allocated column AMARITAL' ,    (df['AMARITAL']==0).sum())    # 2423307
+# print( 'Count Insatnces of no allocated column AIMMIGR'  ,    (df['AIMMIGR']==0).sum())     # 2438543
+# print( 'Count Insatnces of no allocated column AENGLISH' ,    (df['AENGLISH']==0).sum())    # 2431900
+# print( 'Count Insatnces of no allocated column ASEX'     ,    (df['ASEX']==0).sum())        # 2437357
+# print( 'Count Insatnces of no allocated column AAGE'     ,    (df['AAGE']==0).sum())        # 2436030
+# print( 'Count Insatnces of no allocated column AINCOME1' ,    (df['AINCOME1']==0).sum())    # 2106405
+# print('\n')
+# print( 'Count Insatnces of yes allocated column AYEARSCH' ,    (df['AYEARSCH']==1).sum())    # 107265
+# print( 'Count Insatnces of yes allocated column AMARITAL' ,    (df['AMARITAL']==1).sum())    # 34978
+# print( 'Count Insatnces of yes allocated column AIMMIGR'  ,    (df['AIMMIGR']==1).sum())     # 19742
+# print( 'Count Insatnces of yes allocated column AENGLISH' ,    (df['AENGLISH']==1).sum())    # 26385
+# print( 'Count Insatnces of yes allocated column ASEX'     ,    (df['ASEX']==1).sum())        # 20928
+# print( 'Count Insatnces of yes allocated column AAGE'     ,    (df['AAGE']==1).sum())        # 22255
+# print( 'Count Insatnces of yes allocated column AINCOME1' ,    (df['AINCOME1']==1).sum())    # 157850
+
+# df.drop(index=df[df['AYEARSCH'] == 0].index,    inplace=True)
+# df.drop(index=df[df['AMARITAL'] == 0].index,    inplace=True)
+# df.drop(index=df[df['AIMMIGR'] == 0].index,     inplace=True)
+# df.drop(index=df[df['AENGLISH'] == 0].index,    inplace=True)
+# df.drop(index=df[df['ASEX'] == 0].index,        inplace=True)
+# df.drop(index=df[df['AAGE'] == 0].index,        inplace=True)
+# df.drop(index=df[df['AINCOME1'] == 0].index,    inplace=True)
+
+# print(df.shape) 
+
+# Visualize Education attained distribution
+sns.countplot(data=df, x=df['SCHOOL'])
+plt.title('Count the distribution of SCHOOL attained Categorical Column')
+plt.show()
+
+# Visualize Education attained distribution
+sns.countplot(data=df, x=df['MARITAL'])
+plt.title('Count the distribution of MARITAL attained Categorical Column')
+plt.show()
+
+df.drop(index=df[df['SCHOOL']  == 0].index,     inplace=True)   # N/a Less Than 3 Yrs. Old
+df.drop(index=df[df['YEARSCH'] == 0].index,    inplace=True)    # N/a Less Than 3 Yrs. Old
+df.drop(index=df[df['ENGLISH'] == 0].index,    inplace=True)    # N/a Less Than 5 Yrs. Old/speaks Only Eng
+df.drop(index=df[df['IMMIGR'] == 0].index,    inplace=True)     # Born in the U.S.
+
+# SCHOOL
+# 0 ==> not attend
+# 1 ==> attend
+df.loc[ df['SCHOOL'] == 1, 'SCHOOL'] = 0
+df.loc[(df['SCHOOL'] >= 2) & (df['SCHOOL'] <= 3) , 'SCHOOL'] = 1
+
+# IMMIGR
+# 1 ==> Came to US before 1950
+# 1 ==> Came to US after 1950
+df.loc[(df['IMMIGR'] >= 1) & (df['IMMIGR'] <= 9) , 'IMMIGR'] = 0
+df.loc[df['IMMIGR'] == 10, 'IMMIGR'] = 1
+
+# MARITAL
+# 0 ==> Never Married
+# 1 ==> Married 
+df.loc[(df['MARITAL'] >= 0) & (df['MARITAL'] <= 3) , 'MARITAL'] = 1
+df.loc[df['MARITAL'] == 4, 'MARITAL'] = 0
+
+# YEARSCH
+# 1 ==> No School Completed
+# 2 ==> Median Education
+# 3 ==> High Education
+df.loc[(df['YEARSCH'] > 2) & (df['YEARSCH'] < 11) , 'YEARSCH'] = 2
+df.loc[(df['YEARSCH'] > 10) & (df['YEARSCH'] < 18) , 'YEARSCH'] = 3
+
+# AGE
+# df.loc[(df['Age'] > 0) & (df['Age'] < 11) , 'Age'] = 0
+# df.loc[(df['Age'] > 10) & (df['Age'] < 21) , 'Age'] = 1
+# df.loc[(df['Age'] > 20) & (df['Age'] < 31) , 'Age'] = 2
+# df.loc[(df['Age'] > 30) & (df['Age'] < 41) , 'Age'] = 3
+# df.loc[(df['Age'] > 40) & (df['Age'] < 51) , 'Age'] = 4
+# df.loc[(df['Age'] > 50) & (df['Age'] < 61) , 'Age'] = 5
+# df.loc[(df['Age'] > 60) & (df['Age'] < 71) , 'Age'] = 6
+# df.loc[(df['Age'] > 70) & (df['Age'] < 81) , 'Age'] = 7
+# df.loc[(df['Age'] > 80) & (df['Age'] < 91) , 'Age'] = 8
+
+# ENGLISH      
+# 0 ==> Not Speak English
+# 1 ==> Speak English
+df.loc[(df['ENGLISH'] == 4) , 'ENGLISH'] = 0
+df.loc[(df['ENGLISH'] >= 1) & (df['ENGLISH'] <= 3) , 'ENGLISH'] = 1
+
+# CITIZEN
+# 0 ==> Born in U.S.
+# 1 ==> Born not in U.S.
+df.loc[(df['CITIZEN'] == 4) , 'CITIZEN'] = 0
+df.loc[(df['CITIZEN'] >= 1) & (df['CITIZEN'] <= 3) , 'CITIZEN'] = 1
+
+# Race 
+# from 001 ==> 
+
+# # RPOB
+# # 0 ==> in us
+# # 1 ==> not in the us
+# df.loc[(df['RPOB'] > 10) | (df['RPOB'] > 21) | (df['RPOB'] > 22) | (df['RPOB'] > 24) | (df['RPOB'] > 31) | (df['RPOB'] > 32) | (df['RPOB'] > 33) | (df['RPOB'] > 34) | (df['RPOB'] > 35), 'RPOB'] = 0
+# df.loc[(df['RPOB'] > 36) | (df['RPOB'] > 40) | (df['RPOB'] > 51) | (df['RPOB'] > 52), 'RPOB'] = 1
+
+# Visualize Education attained distribution
+sns.countplot(data=df, x=df['RACE'])
+plt.title('Count the distribution of RACE attained Categorical Column')
+plt.show()
+
+# Visualize Education attained distribution
+sns.countplot(data=df, x=df['RPOB'])
+plt.title('Count the distribution of RPOB attained Categorical Column')
+plt.show()
+
+# Visualize Education attained distribution
+sns.countplot(data=df, x=df['SCHOOL'])
+plt.title('Count the distribution of SCHOOL attained Categorical Column')
+plt.show()
 
 # Visualize Education attained distribution
 sns.countplot(data=df, x=df['YEARSCH'])
@@ -67,9 +182,14 @@ plt.title('Count the distribution of males/females where 0:Male 1:Female')
 plt.show()
 
 # Visualize Age distribution
-plt.boxplot(df['Age'].values) 
-plt.title('Visualize Age distribution')
+sns.countplot(data=df, x=df['Age'])
+plt.title('Count the distribution of Age')
 plt.show()
+
+# # Visualize Age distribution
+# plt.boxplot(df['Age'].values) 
+# plt.title('Visualize Age distribution')
+# plt.show()
 
 # Visualize Income distribution
 plt.boxplot(df['INCOME1'].values) 
@@ -77,7 +197,7 @@ plt.title('Visualize INCOME distribution')
 plt.show()
 
 # Detect Outliers
-min_thresold, max_thresold = df.INCOME1.quantile([0.003, 0.990])
+min_thresold, max_thresold = df.INCOME1.quantile([0.004, 0.900])
 print(min_thresold, max_thresold)
 print(df[df.INCOME1 < min_thresold])
 print(df[df.INCOME1 > max_thresold])
@@ -92,14 +212,14 @@ plt.show()
 
 # Data Preprocessing 
 
-# Age:12, INCOME1:65, RACE:94(~40), RPOB:105 (14), YEARSCH:122 (17), SCHOOL:109(4), SEX:112 (2), MARITAL:78(5), IMMIGR:64(11), ENGLISH:58(5)
-df =df.iloc[:, [12,65,122,112,78,64,58]]
+# Age:12, INCOME1:65, RACE:94(~40), RPOB:105 (14), CITIZEN:53, YEARSCH:122 (17), SCHOOL:109(4), SEX:112 (2), MARITAL:78(5), IMMIGR:64(11), ENGLISH:58(5)
+df =df.iloc[:, [12,65,122,112,78,64,53,58,109]]
 
 # # Transform Categorical Data
 # df = pd.get_dummies(df, columns=['RACE'], prefix=['RACE_Type_is'] )
 # df = pd.get_dummies(df, columns=['RPOB'], prefix=['RPOB_Type_is'] )
 df = pd.get_dummies(df, columns=['YEARSCH'], prefix=['YEARSCH_Type_is'] )
-# df = pd.get_dummies(df, columns=['SCHOOL'], prefix=['SCHOOL_Type_is'] )
+df = pd.get_dummies(df, columns=['SCHOOL'], prefix=['SCHOOL_Type_is'] )
 df = pd.get_dummies(df, columns=['SEX'], prefix=['SEX_Type_is'] )
 df = pd.get_dummies(df, columns=['MARITAL'], prefix=['MARITAL_Type_is'] )
 df = pd.get_dummies(df, columns=['IMMIGR'], prefix=['IMMIGR_Type_is'] )
@@ -122,10 +242,10 @@ plt.ylabel('PCA Explained Variance Ratio %')
 plt.title('PCA Variance Ration')
 plt.show()
 
-pca_breast = PCA(n_components=28)
+pca_breast = PCA(n_components=8)
 principalComponents_breast = pca_breast.fit_transform(X)
 principal_breast_Df = pd.DataFrame(data = principalComponents_breast
-             , columns = ['principal component 1', 'principal component 2', 'principal component 3', 'principal component 4', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5', 'principal component 5'])
+             , columns = ['principal component 1', 'principal component 2', 'principal component 3', 'principal component 4', 'principal component 5', 'principal component 6', 'principal component 7', 'principal component 8'])
 
 print('explained_variance_ratio_', pca_breast.explained_variance_ratio_)
 
@@ -148,7 +268,7 @@ plt.title('K-means with PCA clustering')
 plt.show()
 
 # Selecting optimal number of clusters in KMeans
-for i in range(2,10):
+for i in range(2,20):
     labels=KMeans(n_clusters=i,init='k-means++',random_state=200).fit(X).labels_
     print('Silhouette score for k(clusters): '+str(i)+' is '+str(metrics.silhouette_score(X,labels,metric='euclidean',sample_size=1000,random_state=200)))
 
