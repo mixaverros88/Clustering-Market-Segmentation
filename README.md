@@ -55,6 +55,7 @@ TODO: add elbot plot as image
 ## DBSCAN
 
 iCitizen
+Citizenship
 | Initial | Converted |
 | --- | --- |
 | 0: Born in the U.S. | 0: Born in US |
@@ -64,6 +65,7 @@ iCitizen
 | 4: Not a Citizen of the U.s| |
 
 iClass
+Class of Worker
 | Initial | Converted |
 | --- | --- |
 | 0: N/a Less Than 16 Yrs. Old/unemp. Who Nev| 0: Employed |
@@ -77,136 +79,303 @@ iClass
 | 8: Working Without Pay in Fam. Bus. or Farm| |
 | 9: Unemp., Last Worked in 1984 or Earlier| |
  
- 
- 
- 
-
-
-
-
- # iClass
-# 0 ==> not 
-# 1 ==> yes
-df.loc[(df['iClass'] == 0) | (df['iClass'] == 9) , 'iClass'] = 0
-df.loc[(df['iClass'] != 0) & (df['iClass'] != 9) , 'iClass'] = 1
-
-
+iEnglish
 Ability to Speak English
-0:N/a Less Than 5 Yrs. Old/speaks Only Eng
-1:Very Well
-2:Well
-3:Not Well
-4:Not At All
+| Initial | Converted |
+| --- | --- |
+| 0:N/a Less Than 5 Yrs. Old/speaks Only Eng| 0: Not Speak English |
+| 1:Very Well| 1: Speak English |
+| 2:Well| |
+| 3:Not Well| |
+| 4:Not At All| |
 
-# iEnglish      
-# 0 ==> Not Speak English
-# 1 ==> Speak English
-df.loc[(df['iEnglish'] == 4) , 'iEnglish'] = 0
-df.loc[(df['iEnglish'] >= 1) & (df['iEnglish'] <= 3) , 'iEnglish'] = 1
+iFertil
+No. of Chld. Ever Born
+| Initial | Converted |
+| --- | --- |
+| 00:N/a Less Than 15 Yrs./male | 0: No Chld. |
+| 01:No Chld. | 1: 2-4 Child |
+| 02:1 Child | 2: 5-13 Having many Child |
+| 03:2 Chld. | |
+| 04:3 Chld. | |
+| 05:4 Chld. | |
+| 06:5 Chld. | |
+| 07:6 Chld. | |
+| 08:7 Chld. | |
+| 09:8 Chld. | |
+| 10:9 Chld. | |
+| 11:10 Chld. | |
+| 12:11 Chld. | |
+| 13:12 or More Chld. | |
+
+iYearsch
+Ed. Attainment
+| Initial | Converted |
+| --- | --- |
+| 00: N/a Less Than 3 Yrs. Old | 0: No School Completed |
+| 01: No School Completed | 1:Median Education |
+| 02: Nursery School | 2:High Education |
+| 03: Kindergarten | |
+| 04: 1st, 2nd, 3rd, or 4th Grade | |
+| 05: 5th, 6th, 7th, or 8th Grade | |
+| 06: 9th Grade | |
+| 07: 10th Grade | |
+| 08: 11th Grade | |
+| 09: 12th Grade, No Diploma | |
+| 10: High School Graduate, Diploma or Ged | |
+| 11: Some Coll., But No Degree | |
+| 12: Associate Degree in Coll., Occupational | |
+| 13: Associate Degree in Coll., Academic Prog | |
+| 14: Bachelors Degree | |
+| 15: Masters Degree | |
+| 16: Professional Degree | |
+| 17: Doctorate Degree | |
+
+iRspouse
+Married, Spouse Present/spouse Absent
+| Initial | Converted |
+| --- | --- |
+| 0: N/a Less Than 15 Yrs. Old | :0 No |
+| 1: Now Married, Spouse Present | :1 Yes |
+| 2: Now Married, Spouse Absent | |
+| 3: Widowed | |
+| 4: Divorced | |
+| 5: Separated | |
+| 6: Never Married | |
+
+MEANS
+Means of Transportation to Work 
+| Initial | Converted |
+| --- | --- |
+| 00: N/a Not a Worker Not in the Labor Force | 0: Not|
+| 01: Car, Truck, or Van | 1: Public Transportation|
+| 02: Bus or Trolley Bus | 2: By own|
+| 03: Streetcar or Trolley Car | 3: Worked At Home|
+| 04: Subway or Elevated | 4: Other Method|
+| 05: Railroad | |
+| 06: Ferryboat | |
+| 07: Taxicab | |
+| 08: Motorcycle | |
+| 09: Bicycle | |
+| 10: Walked | |
+| 11: Worked At Home | |
+| 12: Other Method | |
+
+MILITARY
+Military Srvc.
+| Initial | Converted |
+| --- | --- |
+| 0:N/a Less Than 16 Yrs. Old| 0: No service|
+| 1:Yes, Now on Active Duty| 1: Service|
+| 2:Yes, on Active Duty in Past, But Not Now| |
+| 3:Yes, Srvc. in Reserves or Nat. Guard Onl| |
+| 4:No Srvc.| |
+
+YRSSERV
+Yrs. of Active Duty Military Srvc.
+|0 = | |
+|1 < 5 | |
+|2 else | |
+
+LANG1
+Language Other Than English At Home
+| Initial | Converted |
+| --- | --- |
+| 0:N/a Less Than 5 Yrs. Old | 0: No |
+| 1:Yes, Speaks Another Language | 1: Yes|
+| 2:No, Speaks Only English | |
+
+MOBILITY
+Mobility Stat. Lived Here on April 1, 19
+| Initial | Converted |
+| --- | --- |
+| 0:N/a Less Than 5 Yrs. Old | 0: No |
+| 1:Yes Same House Nonmovers |  1: Yes |
+| 2:No, Different House Movers | |
 
 
-00:N/a Less Than 15 Yrs./male
-01:No Chld.
-02:1 Child
-03:2 Chld.
-04:3 Chld.
-05:4 Chld.
-06:5 Chld.
-07:6 Chld.
-08:7 Chld.
-09:8 Chld.
-10:9 Chld.
-11:10 Chld.
-12:11 Chld.
-13:12 or More Chld.
+FERTIL
+No. of Chld. Ever Born
+| Initial | Converted |
+| --- | --- |
+| 00:N/a Less Than 15 Yrs./male | 0: No |
+| 01:No Chld. | 1: 2-4|
+| 02:1 Child | 2: having many children 5-13|
+| 03:2 Chld. | |
+| 04:3 Chld. | |
+| 05:4 Chld. | |
+| 06:5 Chld. | |
+| 07:6 Chld. | |
+| 08:7 Chld. | |
+| 09:8 Chld. | |
+| 10:9 Chld. | |
+| 11:10 Chld. | |
+| 12:11 Chld. | |
+| 13:12 or More Chld. | |
 
-# iFertil
-# 0 ==> not 
-# 1 ==> 2-4
-# 2 ==> having many children 5-13
-df.loc[(df['iFertil'] == 0) | (df['iFertil'] == 1) , 'iFertil'] = 0
-df.loc[(df['iFertil'] >= 2) & (df['iFertil'] <= 4) , 'iFertil'] = 1
-df.loc[(df['iFertil'] >= 5) & (df['iFertil'] <= 13) ,'iFertil'] = 2
+RSPOUSE
+Married, Spouse Present/spouse Absent
+| Initial | Converted |
+| --- | --- |
+|0:N/a Less Than 15 Yrs. Old | 0: No|
+|1:Now Married, Spouse Present | 1: Yes |
+|2:Now Married, Spouse Absent | |
+|3:Widowed | |
+|4:Divorced | |
+|5:Separated | |
+|6:Never Married | |
 
+iPerscare
+Personal Care Limitation
+| Initial | Converted |
+| --- | --- |
+|0:N/a Less Than 15 Yrs./instit. Person, an | 0: No |
+|1:Yes, Has a Personal Care Limitation | 1: Yes |
+|2:No, Does Not Have a Personal Care Limita | |
 
-HISPANIC
+REARNING
+Total Pers. Earnings
+| Initial | Converted |
+| --- | --- |
+| 0 < 0 | 0: No |
+| 1 < 15000 | 1: Medium Earning |
+| 2 < 20000 | 2: Rich |
+| 3 < 60000 | |
+| 5 else | |
 
+dPwgt1
+Pers. Wgt
+| Initial | Converted |
+| --- | --- |
+| 0 < 50 | 0: Slim  |
+| 1 < 125 | 1: Normal |
+| 2 < 200 | 2: Obese |
+| 3 else | |
 
+LOOKING
+Looking for Work
+| Initial | Converted |
+| --- | --- |
+| 0:N/a Less Than 16 Yrs. Old/at Work/did No |  0: No   |
+| 1:Yes | 1: Yes |
+| 2:No |  |
 
-YEARSCH      C       X      2             Ed. Attainment
-                                  00      N/a Less Than 3 Yrs. Old
-                                  01      No School Completed
-                                  02      Nursery School
-                                  03      Kindergarten
-                                  04      1st, 2nd, 3rd, or 4th Grade
-                                  05      5th, 6th, 7th, or 8th Grade
-                                  06      9th Grade
-                                  07      10th Grade
-                                  08      11th Grade
-                                  09      12th Grade, No Diploma
-                                  10      High School Graduate, Diploma or Ged
-                                  11      Some Coll., But No Degree
-                                  12      Associate Degree in Coll., Occupational
-                                  13      Associate Degree in Coll., Academic Prog
-                                  14      Bachelors Degree
-                                  15      Masters Degree
-                                  16      Professional Degree
-                                  17      Doctorate Degree
+AVAIL
+Available for Work
+| Initial | Converted |
+| --- | --- |
+| 0:N/a Less Than 16 Yrs./at Work/not Lookin | 0: No |
+| 1:No, Already Has a Job | 1: Yes |
+| 2:No, Temply. Ill | |
+| 3:No, Other Reasons in School, Etc. | |
+| 4:Yes, Could Have Taken a Job | |
 
-# iYearsch
-# 0 ==> No School Completed
-# 1 ==> Median Education
-# 3 ==> High Education
-df.loc[(df['iYearsch'] == 0) | (df['iYearsch'] == 0) , 'iYearsch'] = 0
-df.loc[(df['iYearsch'] > 2) & (df['iYearsch'] < 11) , 'iYearsch'] = 1
-df.loc[(df['iYearsch'] > 10) & (df['iYearsch'] < 18) , 'iYearsch'] = 2
+SCHOOL
+School Enrollment
+| Initial | Converted |
+| --- | --- |
+| 0: N/a Less Than 3 Yrs. Old | 0: Not attend |
+| 1: Not Attending School | 1: Attend |
+| 2: Yes, Pub. School, Pub. Coll. | |
+| 3: Yes, Private School, Private Coll. | |
 
+IMMIGR
+Yr. of Entry
+| Initial | Converted |
+| --- | --- |
+|00:Born in the U.S. |  0: Came to US before 1950 |
+|01:1987 to 1990 | 1: Came to US after 1950 |
+|02:1985 to 1986 | |
+|03:1982 to 1984 | |
+|04:1980 or 1981 | |
+|05:1975 to 1979 | |
+|06:1970 to 1974 | |
+|07:1965 to 1969 | |
+|08:1960 to 1964 | |
+|09:1950 to 1959 | |
+|10:Before 1950 | |
 
-RSPOUSE      C       X      1             Married, Spouse Present/spouse Absent
-                                  0       N/a Less Than 15 Yrs. Old
-                                  1       Now Married, Spouse Present
-                                  2       Now Married, Spouse Absent
-                                  3       Widowed
-                                  4       Divorced
-                                  5       Separated
-                                  6       Never Married
+MARITAL
+Marital Stat.
+| Initial | Converted |
+| --- | --- |
+| 0:Now Married, Except Separated | 0: Never Married |
+| 1:Widowed |  1: Married  |
+| 2:Divorced | |
+| 3:Separated | |
+| 4:Never Married or Under 15 Yrs. Old | |
 
-# iRspouse
-# 0 ==> not 
-# 1 ==> yes
-df.loc[(df['iRspouse'] == 0) | (df['iRspouse'] == 6) , 'iRspouse'] = 0
-df.loc[(df['iRspouse'] >= 1) & (df['iRspouse'] <= 5) , 'iRspouse'] = 1 
+RAGECHLD
+Presence and Age of Own Chld.
+| Initial | Converted |
+| --- | --- |
+| 0:N/a Male | |
+| 1:With Own Chld. Under 6 Yrs. Only | 0: No  |
+| 2:With Own Chld. 6 to 17 Yrs. Only | 1: Yes |
+| 3:With Own Chld. Under 6 Yrs. and 6 to 17 | |
+| 4:No Own Chld. .incl. Females Under 16 Yrs | |
 
+dTravtime
+Temp. Absence From Work
+| Initial | Converted |
+| --- | --- |
+| 0 = 0 | 0: No  |
+| 1 < 10 | 1: Below 1 hour |
+| 2 < 15 | Above 1 hour |
+| 3 < 20 | |
+| 4 < 30 | |
+| 5 < 60 | |
+| else 6 | |
 
-# dRearning
-# 0 ==> not 
-# 1 ==> earning
-# 2 ==> rich
-df.loc[(df['dRearning'] >= 1) & (df['dRearning'] <= 3) , 'dRearning'] = 1
-df.loc[(df['dRearning'] >= 4) & (df['dRearning'] <= 5) , 'dRearning'] = 2
+RPOB
+Place of Birth Recode
+| Initial | Converted |
+| --- | --- |
+| 10: Born in State of Res. | 0: Citizen |
+| 21: Northeast | 1: Not a Citizen |
+| 22: Midwest | |
+| 23: South | |
+| 24: West | |
+| 31: Puerto Rico | |
+| 32: American Samoa | |
+| 33: Guam | |
+| 34: Northern Marianas | |
+| 35: Us Virgin Islands | |
+| 36: Elsewhere | |
+| 40: Born Abroad of American Parents | |
+| 51: Naturalized Citizen | |
+| 52: Not a Citizen | |
 
+dDepart
+Time of Departure for Work Hour and Minu
+| Initial | Converted |
+| --- | --- |
+|0 = 0 | |
+|1 < 600 | |
+|2 < 700 | |
+|3 < 800 | |
+|4 < 1000 | |
+|5 else | |
 
+RIDERS
+Vehicle Occupancy
+| Initial | Converted |
+| --- | --- |
+| 0:N/a Not a Worker or Worker Whose Means o | |
+| 1:Drove Alone | |
+| 2:2 People | |
+| 3:3 People | |
+| 4:4 People | |
+| 5:5 People | |
+| 6:6 People | |
+| 7:7 to 9 People | |
+| 8:10 or More People | |
 
-MEANS        C       X      2             Means of Transportation to Work
-                                  00      N/a Not a Worker Not in the Labor Force,
-                                  01      Car, Truck, or Van
-                                  02      Bus or Trolley Bus
-                                  03      Streetcar or Trolley Car
-                                  04      Subway or Elevated
-                                  05      Railroad
-                                  06      Ferryboat
-                                  07      Taxicab
-                                  08      Motorcycle
-                                  09      Bicycle
-                                  10      Walked
-                                  11      Worked At Home
-                                  12      Other Method
-# 0 ==> not 
-# 1 ==> public transportation
-# 2 ==> by o2n
-# 3 ==> Worked At Home
-# 4 ==> Other Method
-df.loc[(df['iMeans'] => 2) | (df['iMeans'] <= 6) , 'iAvail'] = 1
-df.loc[(df['iAvail'] == 1) | (df['iMeans'] => 7) | (df['iMeans'] <= 10) , 'iAvail'] = 2
-df.loc[ df['iMeans'] == 11, 'iMeans'] = 3
-df.loc[ df['iMeans'] == 12, 'iMeans'] = 4
+### New Columns
+We create a new column called War. This column has 2 values 0 (no), 1(yes).
+This column indicates if the person takes place at least in one war or not. 
+In order to fill the War column we use the following columns
+iFeb55,iKorean,iMay75880,iRvetserv,iSept80,iVietnam,iWWII
+
+### Drop Colums
+iFeb55,iKorean,iMay75880,iRvetserv,iSept80,iVietnam,iWWII

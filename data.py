@@ -12,75 +12,31 @@ import os
 
 missing_values = ['n/a', 'na', '--', '?'] # pandas only detect NaN, NA,  n/a and values and empty shell
 my_path = os.path.abspath(os.path.dirname(__file__))
-df=pd.read_csv(r''+my_path+'\\data\\USCensus1990.data.txt', sep=',', nrows=200000, na_values=missing_values)
+df=pd.read_csv(r''+my_path+'\\data\\USCensus1990.data.txt', sep=',', nrows=2, na_values=missing_values)
 print(df.shape)
 
 # Data Preprocessing 
 
-# # Visualize Education attained distribution
-# sns.countplot(data=df, x=df['iRagechld'])
-# plt.title('Count the distribution of dDepart attained Categorical Column')
-# plt.show()
-
-# # Visualize Education attained distribution
-# sns.countplot(data=df, x=df['dHispanic'])
-# plt.title('Count the distribution of dDepart attained Categorical Column')
-# plt.show()
-
-# # Visualize Education attained distribution
-# sns.countplot(data=df, x=df['dPoverty'])
-# plt.title('Count the distribution of dPoverty attained Categorical Column')
-# plt.show()
-
-# # Visualize Education attained distribution
-# sns.countplot(data=df, x=df['iSchool'])
-# plt.title('Count the distribution of iSchool attained Categorical Column')
-# plt.show()
-
-# # Visualize Education attained distribution
-# sns.countplot(data=df, x=df['iMarital'])
-# plt.title('Count the distribution of iMarital attained Categorical Column')
-# plt.show()
-
-# # Visualize Education attained distribution
-# sns.countplot(data=df, x=df['iRemplpar'])
-# plt.title('Count the distribution of iRemplpar attained Categorical Column')
-# plt.show()
-
-# # Visualize Education attained distribution
-# sns.countplot(data=df, x=df['iAvail'])
-# plt.title('Count the distribution of iAvail attained Categorical Column')
-# plt.show()
-
-# # Visualize Education attained distribution
-# sns.countplot(data=df, x=df['iClass'])
-# plt.title('Count the distribution of iAvail attained Categorical Column')
-# plt.show()
-
-# # Visualize Education attained distribution
-# sns.countplot(data=df, x=df['dDepart'])
-# plt.title('Count the distribution of dDepart attained Categorical Column')
-# plt.show()
-
-# # Visualize Education attained distribution
-# sns.countplot(data=df, x=df['iFertil'])
-# plt.title('Count the distribution of dDepart attained Categorical Column')
-# plt.show()
-
 # iMilitary
-# 0 ==> not 
-# 1 ==> yes
+# 0: No Military service
+# 1: Military Service
 df.loc[(df['iMilitary'] == 0) | (df['iMilitary'] == 4) , 'iMilitary'] = 0
 df.loc[(df['iMilitary'] >= 1) & (df['iMilitary'] <= 3) , 'iMilitary'] = 1
 
 groupedByUserId  = df.groupby(['caseid']) # group rows per user_id
-df.insert(0, 'military', 0 )
-
+df.insert(0, 'military', 0 , True)
 for index,group in groupedByUserId:
-    if group['iFeb55'].values[0] == 1 | group['iKorean'].values[0] == 1 | group['iMay75880'].values[0] == 1 | group['iRvetserv'].values[0] == 1 | group['iSept80'].values[0] == 1 | group['iVietnam'].values[0] == 1 | group['iWWII'].values[0] == 1 | group['dYrsserv'].values[0] == 1 | group['iMilitary'].values[0] == 1 :
+    if group['iFeb55'].values[0] == 1 or group['iKorean'].values[0] == 1 or group['iMay75880'].values[0] == 1 or group['iRvetserv'].values[0] == 1 or group['iSept80'].values[0] == 1 or group['iVietnam'].values[0] == 1 or group['iWWII'].values[0] == 1 :
         df.loc[index,'military'] = 1
+    else:
+        df.loc[index,'military'] = 0
 
-# Drop War columns 
+print(df)
+for col in df.columns:
+    pct_missing = np.mean(df[col].isnull())
+    print('{} - {}%'.format(col, round(pct_missing*100)))
+
+# Start - Drop War columns 
 df.drop('iFeb55', axis=1, inplace=True) 
 df.drop('iKorean', axis=1, inplace=True)
 df.drop('iMay75880', axis=1, inplace=True) 
@@ -88,216 +44,158 @@ df.drop('iRvetserv', axis=1, inplace=True)
 df.drop('iSept80', axis=1, inplace=True)
 df.drop('iVietnam', axis=1, inplace=True)
 df.drop('iWWII', axis=1, inplace=True)
+# End - Drop War columns 
+
 df.drop('dYrsserv', axis=1, inplace=True) # year of active duty
 df.drop('iMilitary', axis=1, inplace=True) # Military Srvc.
+
+df.drop('caseid', axis=1, inplace=True)
 
 df.drop('dHispanic', axis=1, inplace=True) # since tha most cases are not hispanic
 df.drop(index=df[df['dPoverty'] == 0].index,    inplace=True) # drop the rows that has N/A
 df.drop('iRemplpar', axis=1, inplace=True) # since iRemplpar column has many zero values
 df.drop(index=df[df['iSchool']  == 0].index,     inplace=True)   # N/a Less Than 3 Yrs. Old
-#df.drop(index=df[df['iYearsch'] == 0].index,    inplace=True)    # N/a Less Than 3 Yrs. Old
 df.drop(index=df[df['iEnglish'] == 0].index,    inplace=True)    # N/a Less Than 5 Yrs. Old/speaks Only Eng
 df.drop(index=df[df['iImmigr'] == 0].index,    inplace=True)     # Born in the U.S. since we can take this value from the citizen column
-df.drop('caseid', axis=1, inplace=True)
-# YEARWRK ==> Never Worked
-
-# Visualize military attained distribution
-sns.countplot(data=df, x=df['military'])
-plt.title('Count the distribution of military attained Categorical Column')
-plt.show()
 
 #TODO
 #dDepart 
-#Vehicle Occupancy RIDERS
 #dYrsserv vs iMilitary
 #iRiders
+# YEARWRK ==> Never Worked
 #TODO
 
 # iLang1
-# 0 ==> not 
-# 1 ==> yes
+# 0: No 
+# 1: Yes
 df.loc[(df['iLang1'] == 0) | (df['iLang1'] == 2) , 'iLang1'] = 0
 
-#iMobility
-# 0 ==> not 
-# 1 ==> yes
+# iMobility
+# 0: No 
+# 1: Yes
 df.loc[(df['iMobility'] == 0) | (df['iMobility'] == 2) , 'iMobility'] = 0
 
-#iMobillim
-# 0 ==> not 
-# 1 ==> yes
-df.loc[(df['iMobility'] == 0) | (df['iMobility'] == 2) , 'iMobility'] = 0
+# iMobillim
+# 0: No 
+# 1: Yes
+df.loc[(df['iMobillim'] == 0) | (df['iMobillim'] == 2) , 'iMobillim'] = 0
 
 # iFertil
-# 0 ==> not 
-# 1 ==> 2-4
-# 2 ==> having many children 5-13
+# 0: No 
+# 1: 2-4
+# 2: having many children 5-13
 df.loc[(df['iFertil'] == 0) | (df['iFertil'] == 1) , 'iFertil'] = 0
 df.loc[(df['iFertil'] >= 2) & (df['iFertil'] <= 4) , 'iFertil'] = 1
 df.loc[(df['iFertil'] >= 5) & (df['iFertil'] <= 13) ,'iFertil'] = 2
 
 # iRspouse
-# 0 ==> not 
-# 1 ==> yes
+# 0: No 
+# 1: Yes
 df.loc[(df['iRspouse'] == 0) | (df['iRspouse'] == 6) , 'iRspouse'] = 0
 df.loc[(df['iRspouse'] >= 1) & (df['iRspouse'] <= 5) , 'iRspouse'] = 1
 
 # iPerscare
-# PERSCARE     C       X      1             Personal Care Limitation
-#                                   0       N/a Less Than 15 Yrs./instit. Person, an
-#                                   1       Yes, Has a Personal Care Limitation
-#                                   2       No, Does Not Have a Personal Care Limita
-# 0 ==> not 
-# 1 ==> yes
+# 0: No 
+# 1: Yes
 df.loc[df['iPerscare'] == 2, 'iPerscare'] = 0
 
 # dRearning
-# 0 ==> not 
-# 1 ==> earning
-# 2 ==> rich
+# 0: No 
+# 1: Medium Earning
+# 2: Rich
 df.loc[(df['dRearning'] >= 1) & (df['dRearning'] <= 3) , 'dRearning'] = 1
 df.loc[(df['dRearning'] >= 4) & (df['dRearning'] <= 5) , 'dRearning'] = 2
 
-# dPwgt1 => Pers. Wgt
-# 0 ==> slim 
-# 1 ==> normal
-# 2 ==> obese
+# dPwgt1
+# 0: Slim 
+# 1: Normal
+# 2: Obese
 df.loc[(df['dPwgt1'] == 2) | (df['dPwgt1'] == 3) , 'dPwgt1'] = 2
 
 # iMeans
-# 0 ==> not 
-# 1 ==> public transportation
-# 2 ==> by on vichele
-# 3 ==> other
+# 0: Not
+# 1: Public Transportation
+# 2: By own
+# 3: Other
 df.loc[(df['iMeans'] >= 2) | (df['iMeans'] <= 6) , 'iMeans'] = 1
 df.loc[(df['iMeans'] == 1) | (df['iMeans'] >= 7) | (df['iMeans'] <= 10) , 'iMeans'] = 2
 df.loc[ df['iMeans'] == 11, 'iMeans'] = 3
 df.loc[ df['iMeans'] == 12, 'iMeans'] = 4
 
 # iLooking
-# 0 ==> not 
-# 1 ==> yes
+# 0: No 
+# 1: Yes
 df.loc[(df['iLooking'] == 0) | (df['iLooking'] == 2) , 'iLooking'] = 0
 df.loc[ df['iLooking'] == 1, 'iLooking'] = 1
 
 # iClass
-# 0 ==> not 
-# 1 ==> yes
+# 0: No 
+# 1: Yes
 df.loc[(df['iClass'] == 0) | (df['iClass'] == 9) , 'iClass'] = 0
 df.loc[(df['iClass'] != 0) & (df['iClass'] != 9) , 'iClass'] = 1
 
 # iAvail
-# 0 ==> not 
-# 1 ==> yes
+# 0: No 
+# 1: Yes
 df.loc[(df['iAvail'] >= 0) & (df['iAvail'] <= 3) , 'iAvail'] = 0
 df.loc[ df['iAvail'] == 4, 'iAvail'] = 1
 
 # iSchool
-# 0 ==> not attend
-# 1 ==> attend
+# 0: Not attend
+# 1: Attend
 df.loc[ df['iSchool'] == 1, 'iSchool'] = 0
 df.loc[(df['iSchool'] >= 2) & (df['iSchool'] <= 3) , 'iSchool'] = 1
 
 # iImmigr
-# 0 ==> Came to US before 1950
-# 1 ==> Came to US after 1950
+# 0: Came to US before 1950
+# 1: Came to US after 1950
 df.loc[(df['iImmigr'] >= 1) & (df['iImmigr'] <= 9) , 'iImmigr'] = 0
 df.loc[df['iImmigr'] == 10, 'iImmigr'] = 1
 
 # iMarital
-# 0 ==> Never Married
-# 1 ==> Married 
+# 0: Never Married
+# 1: Married 
 df.loc[(df['iMarital'] >= 0) & (df['iMarital'] <= 3) , 'iMarital'] = 1
 df.loc[df['iMarital'] == 4, 'iMarital'] = 0
 
 # iYearsch
-# 0 ==> No School Completed
-# 1 ==> Median Education
-# 3 ==> High Education
-df.loc[(df['iYearsch'] == 0) | (df['iYearsch'] == 0) , 'iYearsch'] = 0
-df.loc[(df['iYearsch'] > 2) & (df['iYearsch'] < 11) , 'iYearsch'] = 1
-df.loc[(df['iYearsch'] > 10) & (df['iYearsch'] < 18) , 'iYearsch'] = 2
+# 0: No School Completed
+# 1: Median Education
+# 3: High Education
+df.loc[(df['iYearsch'] == 0) | (df['iYearsch'] == 1) , 'iYearsch'] = 0
+df.loc[(df['iYearsch'] >= 2) & (df['iYearsch'] <= 10) , 'iYearsch'] = 1
+df.loc[(df['iYearsch'] >= 10) & (df['iYearsch'] <= 17) , 'iYearsch'] = 2
 
 # iEnglish      
-# 0 ==> Not Speak English
-# 1 ==> Speak English
+# 0: Not Speak English
+# 1: Speak English
 df.loc[(df['iEnglish'] == 4) , 'iEnglish'] = 0
 df.loc[(df['iEnglish'] >= 1) & (df['iEnglish'] <= 3) , 'iEnglish'] = 1
 
 # iRagechld
-# 0 ==> No 
-# 1 ==> yes
-df.loc[(df['iYearsch'] == 0) | (df['iYearsch'] == 4) , 'iYearsch'] = 0
-df.loc[(df['iYearsch'] >= 1) & (df['iYearsch'] <= 3) , 'iYearsch'] = 1
+# 0: No 
+# 1: Yes
+df.loc[(df['iRagechld'] == 0) | (df['iRagechld'] == 4) , 'iRagechld'] = 0
+df.loc[(df['iRagechld'] >= 1) & (df['iRagechld'] <= 3) , 'iRagechld'] = 1
 
 # dTravtime
-# 0 ==> No 
-# 1 ==> below 1 hour
-# 2 ==> above 1 hour
-df.loc[(df['iYearsch'] >= 1) & (df['iYearsch'] <= 5) , 'iYearsch'] = 1
-df.loc[(df['iYearsch'] == 6), 'iYearsch'] = 2
+# 0: No 
+# 1: Below 1 hour
+# 2: Above 1 hour
+df.loc[(df['dTravtime'] >= 1) & (df['dTravtime'] <= 5) , 'dTravtime'] = 1
+df.loc[(df['dTravtime'] == 6), 'dTravtime'] = 2
 
 # iCitizen
-# 0 ==> Born in U.S.
-# 1 ==> Born not in U.S.
+# 0: Born in US
+# 1: Not Born in US
 df.loc[(df['iCitizen'] == 4) , 'iCitizen'] = 0
 df.loc[(df['iCitizen'] >= 1) & (df['iCitizen'] <= 3) , 'iCitizen'] = 1
 
-# Visualize Education attained distribution
-sns.countplot(data=df, x=df['iRPOB'])
-plt.title('Count the distribution of iRPOB attained Categorical Column')
-plt.show()
-
 # iRPOB
-# 0 ==> Citizen
-# 1 ==> Not a Citizen
+# 0: Citizen
+# 1: Not a Citizen
 df.loc[df['iRPOB'] != 52, 'iRPOB'] = 0
 df.loc[df['iRPOB'] == 52, 'iRPOB'] = 1
-
-# Visualize Education attained distribution
-sns.countplot(data=df, x=df['iRPOB'])
-plt.title('Count the distribution of iRPOB attained Categorical Column')
-plt.show()
-
-# Visualize Education attained distribution
-sns.countplot(data=df, x=df['iSchool'])
-plt.title('Count the distribution of iSchool attained Categorical Column')
-plt.show()
-
-# Visualize Education attained distribution
-sns.countplot(data=df, x=df['iYearsch'])
-plt.title('Count the distribution of Education attained Categorical Column')
-plt.show()
-
-# Visualize Marital Status distribution
-sns.countplot(data=df, x=df['iMarital'])
-plt.title('Count the distribution of Marital Status Categorical Column')
-plt.show()
-
-# Visualize Immigration year distribution
-sns.countplot(data=df, x=df['iImmigr'])
-plt.title('Count the distribution of Immigration year Categorical Column')
-plt.show()
-
-# Visualize English proficiency distribution
-sns.countplot(data=df, x=df['iEnglish'])
-plt.title('Count the distribution of English proficiency Categorical Column')
-plt.show()
-
-# Visualize Sex distribution
-sns.countplot(data=df, x=df['iSex'])
-plt.title('Count the distribution of males/females where 0:Male 1:Female')
-plt.show()
-
-# Visualize Age distribution
-sns.countplot(data=df, x=df['dAge'])
-plt.title('Count the distribution of dAge')
-plt.show()
-
-# Visualize Income distribution
-sns.countplot(data=df, x=df['dIncome1'])
-plt.title('Count the distribution of Income')
-plt.show()
 
 #Transform Categorical Data
 df = pd.get_dummies(df, columns=['iRPOB'], prefix=['RPOB_Type_is'] )
@@ -402,12 +300,10 @@ print(new_df)
 df1 = new_df[new_df.cluster==0]
 df2 = new_df[new_df.cluster==1]
 df3 = new_df[new_df.cluster==2]
-df4 = new_df[new_df.cluster==3]
 
 plt.scatter(df1['dAge'],df1['dIncome1'],color='green', label='cluster 1')
 plt.scatter(df2['dAge'],df2['dIncome1'],color='red', label='cluster 2')
 plt.scatter(df3['dAge'],df3['dIncome1'],color='black', label='cluster 3')
-plt.scatter(df4['dAge'],df4['dIncome1'],color='yellow', label='cluster 4')
 plt.xlabel('dAge')
 plt.ylabel('dIncome1')
 plt.legend()
@@ -423,7 +319,7 @@ plt.ylabel('Euclidean distance')
 plt.show()
 
 from sklearn.cluster import AgglomerativeClustering
-hc = AgglomerativeClustering(n_clusters = 4, affinity = 'euclidean', linkage = 'ward')
+hc = AgglomerativeClustering(n_clusters = 3, affinity = 'euclidean', linkage = 'ward')
 y_hc = hc.fit_predict(principal_cencus_Df)
 principal_cencus_Df = principal_cencus_Df.values
 print(y_hc)
@@ -434,7 +330,6 @@ print('X[y_hc == 0, 1]', principal_cencus_Df[y_hc == 0, 1])
 plt.scatter(principal_cencus_Df[y_hc == 0, 0], principal_cencus_Df[y_hc == 0, 1], s = 50, c = 'red', label = 'Careful')
 plt.scatter(principal_cencus_Df[y_hc == 1, 0], principal_cencus_Df[y_hc == 1, 1], s = 50, c = 'blue', label = 'Standard')
 plt.scatter(principal_cencus_Df[y_hc == 2, 0], principal_cencus_Df[y_hc == 2, 1], s = 50, c = 'green', label = 'Target')
-plt.scatter(principal_cencus_Df[y_hc == 3, 0], principal_cencus_Df[y_hc == 3, 1], s = 50, c = 'cyan', label = 'Careless')
 plt.title('Clusters of customers')
 plt.xlabel('Annual Income')
 plt.ylabel('Spending Score')
