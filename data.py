@@ -8,14 +8,23 @@ from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import NearestNeighbors
+from sklearn.mixture import GaussianMixture
 from sklearn.cluster import DBSCAN
+import time
 import os
+
+elapsed_time = {
+    "kmeans": [],
+    "gmm": [] ,
+    "hierarchy": [],
+    "dbscan": [] 
+}
 
 # dAncstry1,dAncstry2,iDisabl1,iDisabl2,dHour89,dHours,dIncome1,dIncome2,dIncome3,dIncome4,dIncome5,dIncome6,dIncome7,dIncome8,dIndustry,dOccup,iOthrserv,dPOB,iRelat1,iRelat2,iRiders,iRlabor,iRownchld,dRpincome,iRrelchldiSubfam1,iSubfam2,iTmpabsnt,dWeek89,iWork89,iWorklwk,iYearwrk
 
 missing_values = ['n/a', 'na', '--', '?'] # pandas only detect NaN, NA,  n/a and values and empty shell
 my_path = os.path.abspath(os.path.dirname(__file__))
-df=pd.read_csv(r''+my_path+'\\data\\USCensus1990.data.txt', sep=',', nrows=20000, na_values=missing_values)
+df=pd.read_csv(r''+my_path+'\\data\\USCensus1990.data.txt', sep=',', nrows=2000, na_values=missing_values)
 print(df.shape)
 
 # Data Preprocessing 
@@ -275,18 +284,21 @@ for i in range(2,20):
     print('Silhouette score for k(clusters): '+str(i)+' is '+str(metrics.silhouette_score(X,labels,metric='euclidean',sample_size=1000,random_state=200)))
 
 ########################################################################## KMEANS ##########################################################################
+start_kmeans = time.time()
+#kmeans low performance
 
 km = KMeans(n_clusters=3)
 y_predicted = km.fit_predict(principal_cencus_Df)
-principal_cencus_Df['cluster']=y_predicted
+principal_cencus_Df['cluster_kmeans']=y_predicted
 print(principal_cencus_Df.head())
 print('principal_cencus_Df.shape', principal_cencus_Df.shape)
 print(km.cluster_centers_)
+print(km.labels_)
 print(km.inertia_)
 
-df1 = principal_cencus_Df[principal_cencus_Df.cluster==0]
-df2 = principal_cencus_Df[principal_cencus_Df.cluster==1]
-df3 = principal_cencus_Df[principal_cencus_Df.cluster==2]
+df1 = principal_cencus_Df[principal_cencus_Df.cluster_kmeans==0]
+df2 = principal_cencus_Df[principal_cencus_Df.cluster_kmeans==1]
+df3 = principal_cencus_Df[principal_cencus_Df.cluster_kmeans==2]
 plt.scatter(df1['principal component 1'],df1['principal component 2'],color='green', label='cluster 1')
 plt.scatter(df2['principal component 1'],df2['principal component 2'],color='red', label='cluster 2')
 plt.scatter(df3['principal component 1'],df3['principal component 2'],color='black', label='cluster 3')
@@ -315,9 +327,9 @@ plt.show()
 # plt.show()
 
 print('principal_cencus_Df.shape', principal_cencus_Df.shape)
-
+end_kmeans = time.time()
 ########################################################################## Agglomerative Hierarchical Clustering #######################################################
-
+start_hierarchy = time.time()
 import scipy.cluster.hierarchy as sch
 dendrogrm = sch.dendrogram(sch.linkage(principal_cencus_Df, method = 'ward'))
 plt.title('Dendrogram')
@@ -328,6 +340,7 @@ plt.show()
 from sklearn.cluster import AgglomerativeClustering
 hc = AgglomerativeClustering(n_clusters = 3, affinity = 'euclidean', linkage = 'ward')
 y_hc = hc.fit_predict(principal_cencus_Df)
+principal_cencus_Df['cluster_Algo'] = y_hc
 principal_cencus_Df = principal_cencus_Df.values
 print(y_hc)
 print('X[y_hc == 0, 0]', principal_cencus_Df[y_hc == 0, 0])
@@ -342,14 +355,25 @@ plt.xlabel('Annual Income')
 plt.ylabel('Spending Score')
 plt.legend()
 plt.show()
-
+end_hierarchy = time.time()
 ########################################################################## Gaussian Mixture Model ############################################################
 
+start_gmm = time.time()
+gmm = GaussianMixture(n_components=4).fit(X)
+labels = gmm.predict(X)
+print(labels)
+print('gmm.means_\n', gmm.means_)
+plt.scatter(principal_cencus_Df[labels == 0, 0], principal_cencus_Df[labels == 0, 1], s = 50, c = 'red', label = 'Careful')
+plt.scatter(principal_cencus_Df[labels == 1, 0], principal_cencus_Df[labels == 1, 1], s = 50, c = 'blue', label = 'Standard')
+plt.scatter(principal_cencus_Df[labels== 2, 0], principal_cencus_Df[labels == 2, 1], s = 50, c = 'green', label = 'Target')
+plt.title('Gaussian Mixture Model')
+plt.legend()
+plt.show()
 
-
-
+# TODO: plot likelihood
+end_gmm = time.time()
 ########################################################################## DBSCAN ##########################################################################
-
+start_dbscan = time.time()
 # https://towardsdatascience.com/machine-learning-clustering-dbscan-determine-the-optimal-value-for-epsilon-eps-python-example-3100091cfbc
 # https://www.kdnuggets.com/2020/04/dbscan-clustering-algorithm-machine-learning.html
 
@@ -400,5 +424,13 @@ plt.show()
 # Evaluate Model Performance — Mean Silhouette Coefficient
 # https://medium.com/@tarammullin/dbscan-2788cfce9389
 
+end_dbscan = time.time()
 
+elapsed_time["kmeans"].append(round(end_kmeans-start_kmeans,2))
+elapsed_time["gmm"].append(round(end_gmm-start_gmm,2))
+elapsed_time["hierarchy"].append(round(end_hierarchy-start_hierarchy,2))
+elapsed_time["dbscan"].append(round(end_dbscan-start_dbscan,2))
+
+for x in elapsed_time:
+  print('Computation Time of ' + x + ':', elapsed_time[x])
 ########################################################################## END ##########################################################################

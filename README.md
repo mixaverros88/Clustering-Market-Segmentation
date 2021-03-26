@@ -379,3 +379,12 @@ iFeb55,iKorean,iMay75880,iRvetserv,iSept80,iVietnam,iWWII
 
 ### Drop Colums
 iFeb55,iKorean,iMay75880,iRvetserv,iSept80,iVietnam,iWWII
+
+
+### Computation Time
+| Model | Time (in seconds) |
+| --- | --- |
+| kmeans | |
+| gmm | |
+| hierarchy | |
+| dbscan | |
