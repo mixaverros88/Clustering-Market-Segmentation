@@ -1,3 +1,4 @@
+########################################################################## START ##########################################################################
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -6,13 +7,15 @@ from sklearn import metrics
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import NearestNeighbors
+from sklearn.cluster import DBSCAN
 import os
 
 # dAncstry1,dAncstry2,iDisabl1,iDisabl2,dHour89,dHours,dIncome1,dIncome2,dIncome3,dIncome4,dIncome5,dIncome6,dIncome7,dIncome8,dIndustry,dOccup,iOthrserv,dPOB,iRelat1,iRelat2,iRiders,iRlabor,iRownchld,dRpincome,iRrelchldiSubfam1,iSubfam2,iTmpabsnt,dWeek89,iWork89,iWorklwk,iYearwrk
 
 missing_values = ['n/a', 'na', '--', '?'] # pandas only detect NaN, NA,  n/a and values and empty shell
 my_path = os.path.abspath(os.path.dirname(__file__))
-df=pd.read_csv(r''+my_path+'\\data\\USCensus1990.data.txt', sep=',', nrows=2, na_values=missing_values)
+df=pd.read_csv(r''+my_path+'\\data\\USCensus1990.data.txt', sep=',', nrows=20000, na_values=missing_values)
 print(df.shape)
 
 # Data Preprocessing 
@@ -27,9 +30,9 @@ groupedByUserId  = df.groupby(['caseid']) # group rows per user_id
 df.insert(0, 'military', 0 , True)
 for index,group in groupedByUserId:
     if group['iFeb55'].values[0] == 1 or group['iKorean'].values[0] == 1 or group['iMay75880'].values[0] == 1 or group['iRvetserv'].values[0] == 1 or group['iSept80'].values[0] == 1 or group['iVietnam'].values[0] == 1 or group['iWWII'].values[0] == 1 :
-        df.loc[index,'military'] = 1
+        df.loc[ df['caseid']== index, 'military'] = 1
     else:
-        df.loc[index,'military'] = 0
+        df.loc[ df['caseid']== index, 'military'] = 0
 
 print(df)
 for col in df.columns:
@@ -59,10 +62,10 @@ df.drop(index=df[df['iEnglish'] == 0].index,    inplace=True)    # N/a Less Than
 df.drop(index=df[df['iImmigr'] == 0].index,    inplace=True)     # Born in the U.S. since we can take this value from the citizen column
 
 #TODO
-#dDepart 
-#dYrsserv vs iMilitary
-#iRiders
-# YEARWRK ==> Never Worked
+#   dDepart 
+#   dYrsserv vs iMilitary
+#   iRiders
+#   YEARWRK ==> Never Worked
 #TODO
 
 # iLang1
@@ -271,6 +274,8 @@ for i in range(2,20):
     labels=KMeans(n_clusters=i,init='k-means++',random_state=200).fit(X).labels_
     print('Silhouette score for k(clusters): '+str(i)+' is '+str(metrics.silhouette_score(X,labels,metric='euclidean',sample_size=1000,random_state=200)))
 
+########################################################################## KMEANS ##########################################################################
+
 km = KMeans(n_clusters=3)
 y_predicted = km.fit_predict(principal_cencus_Df)
 principal_cencus_Df['cluster']=y_predicted
@@ -291,26 +296,28 @@ plt.ylabel('dIncome1')
 plt.legend()
 plt.show()
 
-new_df = pd.concat([df.reset_index(drop=True), pd.DataFrame(principal_cencus_Df)], axis=1)
-new_df.columns.values[-4:] = ['principal component 1', 'principal component 2', 'principal component 3', 'principal component 4']
-new_df['cluster']=km.labels_
-print(new_df.columns)
-print(new_df)
+# new_df = pd.concat([df.reset_index(drop=True), pd.DataFrame(principal_cencus_Df)], axis=1)
+# new_df.columns.values[-4:] = ['principal component 1', 'principal component 2', 'principal component 3', 'principal component 4']
+# new_df['cluster']=km.labels_
+# print(new_df.columns)
+# print(new_df)
 
-df1 = new_df[new_df.cluster==0]
-df2 = new_df[new_df.cluster==1]
-df3 = new_df[new_df.cluster==2]
+# df1 = new_df[new_df.cluster==0]
+# df2 = new_df[new_df.cluster==1]
+# df3 = new_df[new_df.cluster==2]
 
-plt.scatter(df1['dAge'],df1['dIncome1'],color='green', label='cluster 1')
-plt.scatter(df2['dAge'],df2['dIncome1'],color='red', label='cluster 2')
-plt.scatter(df3['dAge'],df3['dIncome1'],color='black', label='cluster 3')
-plt.xlabel('dAge')
-plt.ylabel('dIncome1')
-plt.legend()
-plt.show()
+# plt.scatter(df1['dAge'],df1['dIncome1'],color='green', label='cluster 1')
+# plt.scatter(df2['dAge'],df2['dIncome1'],color='red', label='cluster 2')
+# plt.scatter(df3['dAge'],df3['dIncome1'],color='black', label='cluster 3')
+# plt.xlabel('dAge')
+# plt.ylabel('dIncome1')
+# plt.legend()
+# plt.show()
 
 print('principal_cencus_Df.shape', principal_cencus_Df.shape)
-# Hierarchy 
+
+########################################################################## Agglomerative Hierarchical Clustering #######################################################
+
 import scipy.cluster.hierarchy as sch
 dendrogrm = sch.dendrogram(sch.linkage(principal_cencus_Df, method = 'ward'))
 plt.title('Dendrogram')
@@ -335,3 +342,63 @@ plt.xlabel('Annual Income')
 plt.ylabel('Spending Score')
 plt.legend()
 plt.show()
+
+########################################################################## Gaussian Mixture Model ############################################################
+
+
+
+
+########################################################################## DBSCAN ##########################################################################
+
+# https://towardsdatascience.com/machine-learning-clustering-dbscan-determine-the-optimal-value-for-epsilon-eps-python-example-3100091cfbc
+# https://www.kdnuggets.com/2020/04/dbscan-clustering-algorithm-machine-learning.html
+
+# Calculate the distance between 2 points
+neigh = NearestNeighbors(n_neighbors=2)
+nbrs = neigh.fit(X)
+distances, indices = nbrs.kneighbors(X)
+
+distances = np.sort(distances, axis=0)
+distances = distances[:,1]
+print('Distances', distances)
+print('AVG Distances', np.average(distances))
+plt.title('Calculate the distance between 2 points')
+plt.plot(distances)
+plt.show()
+
+m = DBSCAN(eps=0.3, min_samples=5)
+m.fit(X)
+
+clusters = m.labels_
+
+# Number of clusters in labels, ignoring noise if present.
+n_clusters_ = len(set(clusters)) - (1 if -1 in clusters else 0)
+n_noise_ = list(clusters).count(-1)
+
+clusters = m.labels_
+
+print('Estimated number of clusters: %d' % n_clusters_)
+print('Estimated number of noise points: %d' % n_noise_)
+# print("Homogeneity: %0.3f" % metrics.homogeneity_score(labels_true, labels))
+# print("Completeness: %0.3f" % metrics.completeness_score(labels_true, labels))
+# print("V-measure: %0.3f" % metrics.v_measure_score(labels_true, labels))
+# print("Adjusted Rand Index: %0.3f"
+#       % metrics.adjusted_rand_score(labels_true, labels))
+# print("Adjusted Mutual Information: %0.3f"
+#       % metrics.adjusted_mutual_info_score(labels_true, labels))
+# print("Silhouette Coefficient: %0.3f"
+#       % metrics.silhouette_score(X, labels))
+
+
+
+colors = ['royalblue', 'maroon', 'forestgreen', 'mediumorchid', 'tan', 'deeppink', 'olive', 'goldenrod', 'lightcyan', 'navy']
+vectorizer = np.vectorize(lambda x: colors[x % len(colors)])
+
+plt.scatter(X[:,0], X[:,1], c=vectorizer(clusters))
+plt.show()
+
+# Evaluate Model Performance — Mean Silhouette Coefficient
+# https://medium.com/@tarammullin/dbscan-2788cfce9389
+
+
+########################################################################## END ##########################################################################
