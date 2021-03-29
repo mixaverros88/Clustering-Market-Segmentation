@@ -420,7 +420,7 @@ print('Estimated number of noise points: %d' % n_noise_)
 colors = ['royalblue', 'maroon', 'forestgreen', 'mediumorchid', 'tan', 'deeppink', 'olive', 'goldenrod', 'lightcyan', 'navy']
 vectorizer = np.vectorize(lambda x: colors[x % len(colors)])
 plt.scatter(principal_cencus_Df['principal component 1'], principal_cencus_Df['principal component 2'], c=vectorizer(clusters)) # all the dark blue points were categorized as noise.
-plt.title('DBSCAN Clustering 1')
+plt.title('DBSCAN Clustering')
 plt.show()
 
 ########################################################################## Agglomerative Hierarchical Clustering #######################################################
