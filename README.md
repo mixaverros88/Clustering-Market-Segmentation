@@ -348,6 +348,7 @@ iFeb55,iKorean,iMay75880,iRvetserv,iSept80,iVietnam,iWWII
 
 We drop the columns (iFeb55,iKorean,iMay75880,iRvetserv,iSept80,iVietnam,iWWII) that has information about in what war a person has involved since we add this information in war column.
 
+TODO: HOPKINS TEST
 
 ## Principal Components Analysis
 By reducing the number of features, we’re improving the performance of our algorithm. 
@@ -365,8 +366,17 @@ I didn't find an automatic way to compute the min_sample.
 A rule of thumb in order to compute the min_sample for high dimensonal dataset is to multimply the columns by 2.
 In order to calculate the distance from each point to its closest  neighbor we are using the NearestNeighbors
 
+## Evaluation
+| Model | Inertia | Silhouette |
+| --- | --- | --- |
+| kmeans | | | 
+| gmm | | |
+| hierarchy | | |
+| dbscan | | |
 
-### Computation Time
+## Cluster Characterization
+
+## Computation Time
 | Model | Time (in seconds) |
 | --- | --- |
 | kmeans | |
