@@ -9,10 +9,6 @@ https://archive.ics.uci.edu/ml/datasets/US+Census+Data+%281990%29
 | Original    | 2.458.285   | 69      |
 | New         | centered    | 14      |
 
-As we can observe the dataset is equally distributed among sex.
-Print missing values: 0
-TODO: visualize income, age, sex distribution
-
 ![](images/boxPlot1.png)
 ![](images/boxPlot2.png)
 
