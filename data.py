@@ -1,8 +1,9 @@
-########################################################################## START ##########################################################################
+########################################################################## START ############################################
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import scipy.cluster.hierarchy as sch
+from pandas.plotting import parallel_coordinates
 import matplotlib.pyplot as plt
 from sklearn import metrics
 from sklearn.cluster import KMeans
@@ -13,133 +14,22 @@ from sklearn.mixture import GaussianMixture
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.cluster import DBSCAN
 from pyclustertend import hopkins
+from functions import *
 import time
 import os
 
+font = {'family' : 'DejaVu Sans','weight' : 'normal','size' : 6} # decrease font size due to diplay issues of many columns
+plt.rc('font', **font)
 elapsed_time = {"kmeans": [],"gmm": [] ,"hierarchy": [],"dbscan": [] } # Copute the computational time of every algorith
 missing_values = ['n/a', 'na', '--', '?'] # pandas only detect NaN, NA,  n/a and values and empty shell
 my_path = os.path.abspath(os.path.dirname(__file__))
-df=pd.read_csv(r''+my_path+'\\data\\USCensus1990.data.txt', sep=',', nrows=1000, na_values=missing_values)
+df=pd.read_csv(r''+my_path+'\\data\\USCensus1990.data.txt', sep=',', nrows=50000, na_values=missing_values)
 print('initial shape: ', df.shape) 
-
-def plotElbowMethod(X): 
-    # Plot Elbow Method
-    wcss=[]
-    for i in range(1,13):
-        kmeans_pca=KMeans(n_clusters=i,init='k-means++',random_state=200)
-        kmeans_pca.fit(X)
-        wcss.append(kmeans_pca.inertia_) # The lowest SSE value
-
-    plt.plot(range(1,13),wcss, marker='o', linestyle ='--')
-    plt.xlabel('Number of Clusters')
-    plt.ylabel('WCSS')
-    plt.title('Elbow Method')
-    plt.show()
-
-
-def plotSilhouette(X):
-    kmeans_kwargs = {
-        "init": "random",
-        "n_init": 10,
-        "max_iter": 300,
-        "random_state": 42,
-    }
-     # A list holds the silhouette coefficients for each k
-    silhouette_coefficients = []
-
-    # Notice you start at 2 clusters for silhouette coefficient
-    for k in range(2, 11):
-        kmeans = KMeans(n_clusters=k, **kmeans_kwargs)
-        kmeans.fit(scaled_features)
-        score = metrics.silhouette_score(scaled_features, kmeans.labels_)
-        silhouette_coefficients.append(score)
-
-    plt.plot(range(2, 11), silhouette_coefficients)
-    plt.xticks(range(2, 11))
-    plt.xlabel("Number of Clusters")
-    plt.ylabel("Silhouette Coefficient")
-    plt.show()
-
-def displayBoxPlots(df, *dropColums):
-    vizualiseDF=df.copy()
-    for column in dropColums:
-        vizualiseDF.drop(column, axis=1, inplace=True) 
-    vizualiseDF_columns_count = len(vizualiseDF.columns)/2
-    if isinstance(vizualiseDF_columns_count, float):
-        vizualiseDF_columns_count = vizualiseDF_columns_count-0.5
-
-    vizualiseDF_columns_count = int(vizualiseDF_columns_count)
-    for i in range(2):
-        step = i + 1
-        sns.boxplot(data=vizualiseDF.iloc[:, vizualiseDF_columns_count*(i):vizualiseDF_columns_count*(step)])
-        plt.xticks(rotation=90)
-        plt.show()
-
-def characterizeCluster(originalDataFrame, clustersPredictions):
-    # Proceed to Demographic segmentations base on Age, Gender, Ethnicity, Income, Level of education, Religion, Profession/role in a company
-    columns = originalDataFrame.columns
-    originalDataFrame['cluster']=y_predicted
-    clusters = originalDataFrame.groupby(['cluster']) # group rows per cluster
-    print('Clusters Total Count: ', len(clusters))
-    for index,group in clusters:
-        clusterIndicator = str(group['cluster'].iloc[0] + 1)  # + 1 for view reasons since the numbering is starting from zero
-
-        demographicColumns = ['dAge','dIncome1','iSex','iYearsch','iCitizen']
-        for col in demographicColumns:
-            sns.countplot(data=df, x=group[col])
-            plt.title('Count the distribution of ' + col + ' Feature in cluster: ' + clusterIndicator)
-            plt.show()
-
-        plt.scatter(group['dAge'], group['dIncome1'],color='green', label='cluster ' + clusterIndicator)
-        plt.xlabel('Age')
-        plt.ylabel('Income')
-        plt.title('Age and Income distribution for Cluster: ' + clusterIndicator)
-        plt.legend()
-        plt.show()
-
-def calculateNearestNeighbors(X):
-    # In order to calculate the distance from each point to its closest neighbor we are using the NearestNeighbors
-    neigh = NearestNeighbors(n_neighbors=2)
-    nbrs = neigh.fit(X)
-    distances, indices = nbrs.kneighbors(X)
-
-    distances = np.sort(distances, axis=0)
-    distances = distances[:,1]
-    print('Distances', distances)
-    print('AVG Distances', np.average(distances))
-    # The optimal value for epsilon will be found at the point of maximum curvature.
-    plt.title('Calculate the distance between 2 points')
-    plt.plot(distances)
-    plt.show()
-
-def computeMinSamples(X):
-    # Compute best min_sample value
-    min_samples = [10, 11, 12, 13, 14, 15, 16, 17, 18, 25, 26]
-    for i in min_samples:
-        #print('min_samples value is ' + str(i))
-        db = DBSCAN(eps=18, min_samples=i).fit(X)
-        core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
-        core_samples_mask[db.core_sample_indices_] = True
-        # Ingoring the label '-1' as its for the outliers
-        labels = set([label for label in db.labels_ if label >= 0])
-        #print(set(labels))
-        print('For min_samples value = ' + str(i), 'Total no. of clusters are ' + str(len(set(labels))))
-
-def computeEps(X):
-    # Compute best epsilon value, Find the bigest silhouette score
-    range_eps = [16,17,18,19]
-    for i in range_eps:
-        #print('eps value is ' + str(i))
-        db = DBSCAN(eps=i, min_samples=15).fit(X)
-        core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
-        core_samples_mask[db.core_sample_indices_] = True
-        labels = db.labels_
-        #print(set(labels))
-        silhouette_avg = metrics.silhouette_score(X, labels)
-        print('For eps value=' + str(i), labels, 'The average silhouette_score is : ', silhouette_avg)
         
-displayBoxPlots(df, ['caseid','iRemplpar']) 
-# Data Preprocessing 
+displayBoxPlots(df, ['caseid','iRemplpar'])  # display box plots for every column
+
+############################################################# Data Preprocessing  ############################################
+
 groupedByUserId  = df.groupby(['caseid']) # group rows per user_id
 df.insert(0, 'military', 0 , True) # create a column 
 for index,group in groupedByUserId: # loop through every row and if a user a leas has took place in a war add in to military column 1 or 0
@@ -170,6 +60,9 @@ df.drop('iRelat2', axis=1, inplace=True) # since tha most cases are N/a Gq/not O
 # df.drop(index=df[(df['dAncstry1'] >= 4) & (df['dAncstry1'] <= 10)].index, inplace=True) # since we have few rows for that values 
 # df.drop(index=df[(df['dAncstry2'] >= 4) & (df['dAncstry2'] <= 11)].index, inplace=True) # since we have few rows for that values 
 # df.drop(index=df[(df['dRpincome'] == 1)].index, inplace=True) # since we have few rows for that values 
+df.drop('dAncstry1', axis=1, inplace=True)
+df.drop('dAncstry2', axis=1, inplace=True)
+df.drop('dRpincome', axis=1, inplace=True)
 
 # iRemplpar
 # 0: Both Parents Works
@@ -185,7 +78,7 @@ df.loc[(df['iRemplpar'] == 114) | (df['iRemplpar'] == 141) , 'iRemplpar'] = 3 # 
 # Relative : 0
 # No Relative : 1
 df.loc[(df['iRelat1'] >= 0) & (df['iRelat1'] <= 6) , 'iRelat1'] = 0 # Relative
-df.loc[(df['iRelat1'] >= 7) & (df['iRelat1'] <= 12) , 'iRelat1'] = 1 # No Relative
+df.loc[(df['iRelat1'] >= 7) & (df['iRelat1'] <= 13) , 'iRelat1'] = 1 # No Relative
 
 # iRiders
 # 0: N/a Not a Worker or Worker Whose Means o
@@ -260,7 +153,7 @@ df.loc[(df['dPwgt1'] == 2) | (df['dPwgt1'] == 3) , 'dPwgt1'] = 2
 # 3: Other
 df.loc[(df['iMeans'] == 1) | ((df['iMeans'] >= 7) & (df['iMeans'] <= 10)) , 'iMeans'] = 1
 df.loc[(df['iMeans'] >= 2) & (df['iMeans'] <= 6) , 'iMeans'] = 2
-df.loc[(df['iMeans'] == 11) & (df['iMeans'] == 12) , 'iMeans'] = 3
+df.loc[(df['iMeans'] == 11) | (df['iMeans'] == 12) , 'iMeans'] = 3
 
 # iLooking
 # 0: No 
@@ -325,6 +218,15 @@ df.loc[(df['iRagechld'] >= 1) & (df['iRagechld'] <= 3) , 'iRagechld'] = 1
 df.loc[(df['dTravtime'] >= 1) & (df['dTravtime'] <= 5) , 'dTravtime'] = 1
 df.loc[(df['dTravtime'] == 6), 'dTravtime'] = 2
 
+# iYearwrk
+# 0: N/a Less Than 16 Yrs. Old
+# 1: From 1980 until 1990
+# 2: 1979 or Earlier
+# 3: Never Worked
+df.loc[(df['iYearwrk'] >= 1) & (df['iYearwrk'] <= 5) , 'iYearwrk'] = 1
+df.loc[(df['iYearwrk'] == 6), 'dTravtime'] = 2
+df.loc[(df['iYearwrk'] == 7), 'iYearwrk'] = 3
+
 # iCitizen
 # 0: Born in US
 # 1: Not Born in US
@@ -363,7 +265,7 @@ transformedDF = df.copy()
 for column in transformedDF:
     catLen = len(transformedDF[column].value_counts().index) # count the categorical values per column since is not need to convert the columns that has only 2 classes
     if catLen > 2:
-        transformedDF = pd.get_dummies(transformedDF, columns=[column], prefix=[column + '_Type_is'] )
+        transformedDF = pd.get_dummies(transformedDF, columns=[column], prefix=[column] )
 
 print('After Converting categorical variable into dummy/indicator variables: ', transformedDF.shape) 
 
@@ -407,11 +309,11 @@ plt.show()
 
 ############################################################### Partitional clustering: KMEANS ##########################################################################
 
-#plotSilhouette(X)
+plotSilhouette(X, scaled_features)
 plotElbowMethod(X)
 
 # Selecting optimal number of clusters in KMeans
-for i in range(2,13):
+for i in range(2,10):
     kMeans_labels=KMeans(n_clusters=i,init='k-means++',random_state=200).fit(X).labels_
     print('Silhouette score for k(clusters): '+str(i)+' is '+str(metrics.silhouette_score(X,kMeans_labels,metric='euclidean',sample_size=1000,random_state=200)))
 
@@ -420,7 +322,7 @@ km = KMeans(n_clusters=3,init='k-means++',random_state=200)
 y_predicted = km.fit_predict(X)
 end_kmeans = time.time()
 
-characterizeCluster(df.copy(), y_predicted)
+#characterizeCluster(df.copy(), y_predicted)
 km.cluster_centers_ # get cluster centers
 km.n_iter_# The number of iterations required to converge
 print ('KMEANS Inertia Score: ',round(km.inertia_,3)) # The lowest SSE value
@@ -439,6 +341,17 @@ plt.ylabel('Principal component 2')
 plt.title('KMEANS Clustering')
 plt.legend()
 plt.show()
+
+# Plot Parallel Coordinate plot for the Centroids
+columnIndexes = []
+columns = ["dAge_0","dAge_1","dAge_2","dAge_3","dAge_4","dAge_5","dAge_6","dAge_7", "dIncome1_0","dIncome1_1","dIncome1_2","dIncome1_3","dIncome1_4", "iSex", "iCitizen", "iMarital", "iFertil_0","iFertil_1","iFertil_2"]
+for col in columns:
+    columnIndexes.append(transformedDF.columns.get_loc(col))
+
+# Create a data frame containing our centroids
+centroids = pd.DataFrame(km.cluster_centers_[:, columnIndexes], columns=columns)
+centroids['cluster'] = centroids.index
+display_parallel_coordinates_centroids(centroids, 3)
 
 print('principal_cencus_Df.shape', principal_cencus_Df.shape)
 principal_cencus_Df.drop('cluster_kmeans',axis=1,inplace=True)
@@ -476,11 +389,35 @@ plt.scatter(principal_cencus_Df['principal component 1'], principal_cencus_Df['p
 plt.title('DBSCAN Clustering')
 plt.show()
 
+# Building the label to colour mapping
+colours = {}
+colours[0]  = 'r'  # red
+colours[1]  = 'g'  # green
+colours[2]  = 'b'  # blue
+colours[3]  = 'y'  # yellow
+colours[-1] = 'k'  # black
+# Building the colour vector for each data point
+cvec = [colours[label] for label in clusters]
+  
+# For the construction of the legend of the plot
+r = plt.scatter(principal_cencus_Df['principal component 1'], principal_cencus_Df['principal component 2'], color ='r')
+g = plt.scatter(principal_cencus_Df['principal component 1'], principal_cencus_Df['principal component 2'], color ='g')
+b = plt.scatter(principal_cencus_Df['principal component 1'], principal_cencus_Df['principal component 2'], color ='b')
+y = plt.scatter(principal_cencus_Df['principal component 1'], principal_cencus_Df['principal component 2'], color ='y')
+k = plt.scatter(principal_cencus_Df['principal component 1'], principal_cencus_Df['principal component 2'], color ='k')
+# Plotting P1 on the X-Axis and P2 on the Y-Axis 
+# according to the colour vector defined
+plt.scatter(principal_cencus_Df['principal component 1'], principal_cencus_Df['principal component 2'], c = cvec)
+plt.title('DBSCAN Clustering 2')
+plt.legend((r, g, b, y, k), ('Label 0', 'Label 1', 'Label 2', 'Label 3', 'Outliers'))
+plt.show()
+
 #################################################### Hierarchical clustering:Agglomerative Hierarchical Clustering #######################################################
 
 # Plot Dendrogram
 dendrogrm = sch.dendrogram(sch.linkage(X, method = 'ward'))
 plt.title('Dendrogram')
+plt.xticks(rotation=90) 
 plt.show()
 
 start_hierarchy = time.time()
@@ -500,6 +437,19 @@ plt.xlabel('Principal component 1')
 plt.ylabel('Principal component 2')
 plt.legend()
 plt.show()
+
+# Add the cluster number to the original scaled data
+first_split =transformedDF.sample(n=15, axis=1)
+X_clustered = pd.DataFrame(X[:, 0:15], index=first_split.index, columns=first_split.columns)
+X_clustered["cluster"] = y_hc
+
+print(X_clustered["cluster"].value_counts())
+# Show a dendrogram, just for the first smallest cluster
+from scipy.cluster.hierarchy import linkage, fcluster 
+sample = X_clustered[X_clustered.cluster==2]
+Z = linkage(sample, 'ward') 
+names = sample.index 
+plot_dendrogram(Z, names, figsize=(10,15))
 
 ########################################################################## Gaussian Mixture Model ############################################################
 

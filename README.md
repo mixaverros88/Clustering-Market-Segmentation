@@ -8,8 +8,9 @@ https://archive.ics.uci.edu/ml/datasets/US+Census+Data+%281990%29
 | ------------|:-----------:| -------:|
 | Original    | 2.458.285   | 68      |
 
+TODO: add functions.py
 TODO: missing values
-Unique Values: 371
+Unique Values: 398
 ### Box Plots for every feature
 
 ![](images/boxPlot1.png)
@@ -351,8 +352,9 @@ Vehicle Occupancy, Column Name: iRiders
 | 7:7 to 9 People | |
 | 8:10 or More People | |
 
-After Converting categorical variable into dummy/indicator variables:  (200000, 185)
-Unique Values after pre-processing: 210
+After Converting categorical variable into dummy/indicator variables:  (200000, 187)
+Unique Values after pre-processing: 214
+
 ### Box Plot for every feature after pre-processing
 
 ![](images/boxPlotAfter1.png)
