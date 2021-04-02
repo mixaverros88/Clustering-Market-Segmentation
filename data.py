@@ -19,7 +19,7 @@ import os
 elapsed_time = {"kmeans": [],"gmm": [] ,"hierarchy": [],"dbscan": [] } # Copute the computational time of every algorith
 missing_values = ['n/a', 'na', '--', '?'] # pandas only detect NaN, NA,  n/a and values and empty shell
 my_path = os.path.abspath(os.path.dirname(__file__))
-df=pd.read_csv(r''+my_path+'\\data\\USCensus1990.data.txt', sep=',', nrows=2000, na_values=missing_values)
+df=pd.read_csv(r''+my_path+'\\data\\USCensus1990.data.txt', sep=',', nrows=1000, na_values=missing_values)
 print('initial shape: ', df.shape) 
 
 def plotElbowMethod(X): 
@@ -151,6 +151,9 @@ for index,group in groupedByUserId: # loop through every row and if a user a lea
 # Print missing values
 print('Print missing values: ', df.isnull().values.sum())
 
+df.drop('caseid', axis=1, inplace=True) 
+print('Count all the unique values before pre-processing: ', df.nunique().sum())
+
 # Drop Military related columns 
 df.drop('iFeb55', axis=1, inplace=True) 
 df.drop('iKorean', axis=1, inplace=True)
@@ -162,7 +165,6 @@ df.drop('iWWII', axis=1, inplace=True)
 df.drop('iOthrserv', axis=1, inplace=True)
 df.drop('iSubfam1', axis=1, inplace=True) # drop both iSubfam1, iSubfam2 since in iSubfam2 the most of the cases are 0 
 df.drop('iSubfam2', axis=1, inplace=True)
-df.drop('caseid', axis=1, inplace=True) 
 df.drop('dHispanic', axis=1, inplace=True) # since tha most cases are not hispanic
 df.drop('iRelat2', axis=1, inplace=True) # since tha most cases are N/a Gq/not Other Rel.
 # df.drop(index=df[(df['dAncstry1'] >= 4) & (df['dAncstry1'] <= 10)].index, inplace=True) # since we have few rows for that values 
@@ -194,7 +196,7 @@ df.loc[(df['iRiders'] >= 2) & (df['iRiders'] <= 8) , 'iRiders'] = 2 # more than 
 # iTmpabsnt
 # 0: N/a Less Than 16 Yrs. Old/at Work/did No
 # 1: Yes
-# 3: No
+# 2: No
 df.loc[(df['iTmpabsnt'] == 1) | (df['iTmpabsnt'] == 2) , 'iTmpabsnt'] = 1
 df.loc[(df['iTmpabsnt'] == 3) , 'iTmpabsnt'] = 2
 
@@ -335,6 +337,7 @@ df.loc[(df['iCitizen'] >= 1) & (df['iCitizen'] <= 3) , 'iCitizen'] = 1
 df.loc[df['iRPOB'] != 52, 'iRPOB'] = 0
 df.loc[df['iRPOB'] == 52, 'iRPOB'] = 1
 
+print('Count all the unique values after pre-processing: ', df.nunique().sum())
 displayBoxPlots(df) 
 
 # Visualize Raw Data
@@ -404,7 +407,7 @@ plt.show()
 
 ############################################################### Partitional clustering: KMEANS ##########################################################################
 
-plotSilhouette(X)
+#plotSilhouette(X)
 plotElbowMethod(X)
 
 # Selecting optimal number of clusters in KMeans
