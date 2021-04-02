@@ -19,9 +19,7 @@ TODO: missing values
 
 Another observation from the graph concerns the domains of the two variables Age and Income. We understand that the domain for Age is from around 20 to 70, whereas for Income it is from around 40,000 to over 300,000. Which points to a vast difference between the range of these values. Therefore, we must incorporate an important step in our analysis, and we must first standardize our data. Standardization is an important part of data preprocessing, which is why we’ve devoted the entire next paragraph precisely to this topic.
 
-iCitizen
-
-Citizenship
+Citizenship, Column Name: iCitizen
 | Initial | Converted |
 | --- | --- |
 | 0: Born in the U.S. | 0: Born in US |
@@ -30,9 +28,7 @@ Citizenship
 | 3: U.S. Citizen by Naturalization| |
 | 4: Not a Citizen of the U.s| |
 
-iClass
-
-Class of Worker
+Class of Worker, Column Name: iClass
 | Initial | Converted |
 | --- | --- |
 | 0: N/a Less Than 16 Yrs. Old/unemp. Who Nev| 0: Employed |
@@ -46,9 +42,7 @@ Class of Worker
 | 8: Working Without Pay in Fam. Bus. or Farm| |
 | 9: Unemp., Last Worked in 1984 or Earlier| |
  
-iEnglish
-
-Ability to Speak English
+Ability to Speak English, Column Name: iEnglish 
 | Initial | Converted |
 | --- | --- |
 | 0:N/a Less Than 5 Yrs. Old/speaks Only Eng| 0: Not Speak English |
@@ -57,24 +51,7 @@ Ability to Speak English
 | 3:Not Well| |
 | 4:Not At All| |
 
-RIDERS
-
-Vehicle Occupancy
-| Initial | Converted |
-| --- | --- |
-| 0:N/a Not a Worker or Worker Whose Means o | 0: N/a Not a Worker or Worker Whose Means o |
-| 1:Drove Alone | 1: Drove Alone |
-| 2:2 People | 2: More than 2 people |
-| 3:3 People | |
-| 4:4 People | |
-| 5:5 People | |
-| 6:6 People | |
-| 7:7 to 9 People | |
-| 8:10 or More People | |
-
-REMPLPAR
-
-Employment Stat. of Parents
+Employment Stat. of Parents, Column Name: iRemplpar
 | Initial | Converted |
 | --- | --- |
 | 000: N/a Not Own Child of Hshldr., and Not Ch | 0: Both Parents Works |
@@ -94,9 +71,7 @@ Employment Stat. of Parents
 | 222: Mother Not At Work 35 or More Hrs. | |
 | 223: Mother Not in Labor Force | |
 
-TMPABSNT
-
-Temp. Absence From Work 
+Temp. Absence From Work , Column Name: iTmpabsnt
 | Initial | Converted |
 | --- | --- |
 | Temp. Absence From Work |  |
@@ -105,9 +80,7 @@ Temp. Absence From Work
 | 2: Yes, on Vacation, Temp. Illness, Labor D | 2: No |
 | 3: No | |
 
-RELAT1
-
-Rel. or Not Related or Grp. Qtrs.
+Rel. or Not Related or Grp. Qtrs., Column Name: iRelat1
 | Initial | Converted |
 | --- | --- |
 | 00 |Hshldr. | 0: Relative|
@@ -125,9 +98,7 @@ Rel. or Not Related or Grp. Qtrs.
 | 12 |Instit. Person | |
 | 13 |Other Pers. in Grp. Qtrs. | |
 
-iFertil
-
-No. of Chld. Ever Born
+No. of Chld. Ever Born, Column Name: iFertil
 | Initial | Converted |
 | --- | --- |
 | 00:N/a Less Than 15 Yrs./male | 0: No Chld. |
@@ -145,9 +116,7 @@ No. of Chld. Ever Born
 | 12:11 Chld. | |
 | 13:12 or More Chld. | |
 
-iYearsch
-
-Ed. Attainment
+Ed. Attainment, Column Name: iYearsch
 | Initial | Converted |
 | --- | --- |
 | 00: N/a Less Than 3 Yrs. Old | 0: No School Completed |
@@ -169,9 +138,7 @@ Ed. Attainment
 | 16: Professional Degree | |
 | 17: Doctorate Degree | |
 
-iRspouse
-
-Married, Spouse Present/spouse Absent
+Married, Spouse Present/spouse Absent, Column Name: iRspouse
 | Initial | Converted |
 | --- | --- |
 | 0: N/a Less Than 15 Yrs. Old | 0: No |
@@ -182,9 +149,7 @@ Married, Spouse Present/spouse Absent
 | 5: Separated | |
 | 6: Never Married | |
 
-MEANS
-
-Means of Transportation to Work 
+Means of Transportation to Work , Column Name: iMeans
 | Initial | Converted |
 | --- | --- |
 | 00: N/a Not a Worker Not in the Labor Force | 0: Not|
@@ -201,9 +166,7 @@ Means of Transportation to Work
 | 11: Worked At Home | |
 | 12: Other Method | |
 
-MILITARY
-
-Military Srvc.
+Military Srvc., Column Name: iMilitary
 | Initial | Converted |
 | --- | --- |
 | 0:N/a Less Than 16 Yrs. Old| 0: No service|
@@ -212,35 +175,21 @@ Military Srvc.
 | 3:Yes, Srvc. in Reserves or Nat. Guard Onl| |
 | 4:No Srvc.| |
 
-YRSSERV
-
-Yrs. of Active Duty Military Srvc.
-|0 = | |
-|1 < 5 | |
-|2 else | |
-
-LANG1
-
-Language Other Than English At Home
+Language Other Than English At Home, Column Name: iLang1
 | Initial | Converted |
 | --- | --- |
 | 0:N/a Less Than 5 Yrs. Old | 0: No |
 | 1:Yes, Speaks Another Language | 1: Yes|
 | 2:No, Speaks Only English | |
 
-MOBILITY
-
-Mobility Stat. Lived Here on April 1, 19
+Mobility Stat. Lived Here on April 1, 19, Column Name: iMobility
 | Initial | Converted |
 | --- | --- |
 | 0:N/a Less Than 5 Yrs. Old | 0: No |
 | 1:Yes Same House Nonmovers |  1: Yes |
 | 2:No, Different House Movers | |
 
-
-FERTIL
-
-No. of Chld. Ever Born
+No. of Chld. Ever Born, Column Name: iFertil
 | Initial | Converted |
 | --- | --- |
 | 00:N/a Less Than 15 Yrs./male | 0: No |
@@ -258,9 +207,7 @@ No. of Chld. Ever Born
 | 12:11 Chld. | |
 | 13:12 or More Chld. | |
 
-RSPOUSE
-
-Married, Spouse Present/spouse Absent
+Married, Spouse Present/spouse Absent, Column Name: iRspouse
 | Initial | Converted |
 | --- | --- |
 |0:N/a Less Than 15 Yrs. Old | 0: No|
@@ -271,18 +218,14 @@ Married, Spouse Present/spouse Absent
 |5:Separated | |
 |6:Never Married | |
 
-iPerscare
-
-Personal Care Limitation
+Personal Care Limitation, Column Name: iPerscare
 | Initial | Converted |
 | --- | --- |
 |0:N/a Less Than 15 Yrs./instit. Person, an | 0: No |
 |1:Yes, Has a Personal Care Limitation | 1: Yes |
 |2:No, Does Not Have a Personal Care Limita | |
 
-REARNING
-
-Total Pers. Earnings
+Total Pers. Earnings, Column Name: dRearning
 | Initial | Converted |
 | --- | --- |
 | 0 < 0 | 0: No |
@@ -291,9 +234,7 @@ Total Pers. Earnings
 | 3 < 60000 | |
 | 5 else | |
 
-dPwgt1
-
-Pers. Wgt
+Pers. Wgt, Column Name: dPwgt1
 | Initial | Converted |
 | --- | --- |
 | 0 < 50 | 0: Slim  |
@@ -301,18 +242,14 @@ Pers. Wgt
 | 2 < 200 | 2: Obese |
 | 3 else | |
 
-LOOKING
-
-Looking for Work
+Looking for Work, Column Name: iLooking
 | Initial | Converted |
 | --- | --- |
 | 0:N/a Less Than 16 Yrs. Old/at Work/did No |  0: No   |
 | 1:Yes | 1: Yes |
 | 2:No |  |
 
-AVAIL
-
-Available for Work
+Available for Work, Column Name: iAvail
 | Initial | Converted |
 | --- | --- |
 | 0:N/a Less Than 16 Yrs./at Work/not Lookin | 0: No |
@@ -321,9 +258,7 @@ Available for Work
 | 3:No, Other Reasons in School, Etc. | |
 | 4:Yes, Could Have Taken a Job | |
 
-SCHOOL
-
-School Enrollment
+School Enrollment, Column Name: iSchool
 | Initial | Converted |
 | --- | --- |
 | 0: N/a Less Than 3 Yrs. Old | 0: Not attend |
@@ -331,9 +266,7 @@ School Enrollment
 | 2: Yes, Pub. School, Pub. Coll. | |
 | 3: Yes, Private School, Private Coll. | |
 
-IMMIGR
-
-Yr. of Entry
+Yr. of Entry, Column Name: iImmigr
 | Initial | Converted |
 | --- | --- |
 |00:Born in the U.S. |  0: Came to US before 1950 |
@@ -348,9 +281,7 @@ Yr. of Entry
 |09:1950 to 1959 | |
 |10:Before 1950 | |
 
-MARITAL
-
-Marital Stat.
+Marital Stat., Column Name: iMarital
 | Initial | Converted |
 | --- | --- |
 | 0:Now Married, Except Separated | 0: Never Married |
@@ -359,9 +290,7 @@ Marital Stat.
 | 3:Separated | |
 | 4:Never Married or Under 15 Yrs. Old | |
 
-RAGECHLD
-
-Presence and Age of Own Chld.
+Presence and Age of Own Chld., Column Name: iRagechld
 | Initial | Converted |
 | --- | --- |
 | 0:N/a Male | |
@@ -370,9 +299,7 @@ Presence and Age of Own Chld.
 | 3:With Own Chld. Under 6 Yrs. and 6 to 17 | |
 | 4:No Own Chld. .incl. Females Under 16 Yrs | |
 
-dTravtime
-
-Temp. Absence From Work
+Temp. Absence From Work, Column Name: dTravtime
 | Initial | Converted |
 | --- | --- |
 | 0 = 0 | 0: No  |
@@ -383,9 +310,7 @@ Temp. Absence From Work
 | 5 < 60 | |
 | else 6 | |
 
-RPOB
-
-Place of Birth Recode
+Place of Birth Recode, Column Name: iRPOB
 | Initial | Converted |
 | --- | --- |
 | 10: Born in State of Res. | 0: Citizen |
@@ -403,9 +328,7 @@ Place of Birth Recode
 | 51: Naturalized Citizen | |
 | 52: Not a Citizen | |
 
-dDepart
-
-Time of Departure for Work Hour and Minu
+Time of Departure for Work Hour and Minu, Column Name:dDepart
 | Initial | Converted |
 | --- | --- |
 |0 = 0 | |
@@ -415,9 +338,7 @@ Time of Departure for Work Hour and Minu
 |4 < 1000 | |
 |5 else | |
 
-RIDERS
-
-Vehicle Occupancy
+Vehicle Occupancy, Column Name: iRiders
 | Initial | Converted |
 | --- | --- |
 | 0:N/a Not a Worker or Worker Whose Means o | |
