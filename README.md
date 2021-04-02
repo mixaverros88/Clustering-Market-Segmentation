@@ -1,13 +1,16 @@
 
 ## Data description
 
-The USCensus19910raw data set, it is a multivariate dataset which consist of 69 categorical feature and 2458285 rows.
+The USCensus19910raw data set, it is a multivariate dataset which consist of 68 categorical feature and 2458285 rows.
 https://archive.ics.uci.edu/ml/datasets/US+Census+Data+%281990%29
 
 | Dataset     | Instances   | Features|
 | ------------|:-----------:| -------:|
-| Original    | 2.458.285   | 69      |
-| New         | centered    | 14      |
+| Original    | 2.458.285   | 68      |
+
+TODO: missing values
+
+### Box Plots for every feature
 
 ![](images/boxPlot1.png)
 ![](images/boxPlot2.png)
@@ -429,7 +432,10 @@ Vehicle Occupancy
 
 After Converting categorical variable into dummy/indicator variables:  (200000, 185)
 
+### Box Plot for every feature after pre-processing
+
 ![](images/boxPlotAfter1.png)
+
 ![](images/boxPlot_after_2.png)
 
 ### New Columns
@@ -450,14 +456,15 @@ TODO: HOPKINS TEST
 ## Principal Components Analysis
 
 We perform PCA only for visuale perposes.
-TODO: add plot as image
 
 ![](images/pcaVarianceRation.png)
+
 ![](images/pcaDistribution.png)
 
 ## K-Means Clustering
 
 ![](images/elbowMethod.png)
+
 ![](images/kMeans.png)
 
 ## Hierachical Clustering
