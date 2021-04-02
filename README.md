@@ -12,9 +12,9 @@ https://archive.ics.uci.edu/ml/datasets/US+Census+Data+%281990%29
 As we can observe the dataset is equally distributed among sex.
 Print missing values: 0
 TODO: visualize income, age, sex distribution
-TODO: add box-plot from every column
 
-![alt text](https://raw.githubusercontent.com/mixaverros88/Clustering-Market-Segmentation/main/images/sexdist.png?token=ACYAUFMLJRSCJQMYUHMCYZ3AKGR4G)
+![](images/boxPlot1.png)
+![](images/boxPlot2.png)
 
 ## Data preprocessing
 
@@ -54,6 +54,69 @@ Ability to Speak English
 | 2:Well| |
 | 3:Not Well| |
 | 4:Not At All| |
+
+RIDERS
+Vehicle Occupancy
+| Initial | Converted |
+| --- | --- |
+| 0:N/a Not a Worker or Worker Whose Means o | 0: N/a Not a Worker or Worker Whose Means o |
+| 1:Drove Alone | 1: Drove Alone |
+| 2:2 People | 2: More than 2 people |
+| 3:3 People | |
+| 4:4 People | |
+| 5:5 People | |
+| 6:6 People | |
+| 7:7 to 9 People | |
+| 8:10 or More People | |
+
+| REMPLPAR
+| Employment Stat. of Parents
+| Initial | Converted |
+| --- | --- |
+| 000: N/a Not Own Child of Hshldr., and Not Ch | 0: Both Parents Works |
+| 111: Both Parents At Work 35 or More Hrs. | 1: Only Father Works |
+| 112: Father Only At Work 35 or More Hrs. | 2: Only Mather Works |
+| 113: Mother Only At Work 35 or More Hrs. | 3: Neither Parent Works |
+| 114: Neither Parent At Work 35 or More Hrs. | |
+| 121: Father At Work 35 or More Hrs. | |
+| 122: Father Not At Work 35 or More Hrs. | |
+| 133: Mother At Work 35 or More Hrs. | |
+| 134: Mother Not At Work 35 or More Hrs. | |
+| 141: Neither Parent in Labor Force | |
+| 211: Father At Work 35 or More Hrs. | |
+| 212: Father Not At Work 35 or More Hrs. | |
+| 213: Father Not in Labor Force | |
+| 221: Mother At Work 35 or More Hrs. | |
+| 222: Mother Not At Work 35 or More Hrs. | |
+| 223: Mother Not in Labor Force | |
+
+TMPABSNT
+| Initial | Converted |
+| --- | --- |
+| Temp. Absence From Work | 0: N/a Less Than 16 Yrs. Old/at Work/did No |
+| 0: N/a Less Than 16 Yrs. Old/at Work/did No | 1: Yes |
+| 1: Yes, on Layoff | 3: No |
+| 2: Yes, on Vacation, Temp. Illness, Labor D | |
+| 3: No | |
+
+RELAT1
+Rel. or Not Related or Grp. Qtrs.
+| Initial | Converted |
+| --- | --- |
+| 00 |Hshldr. | 0: Relative|
+| 01 |Husband/wife | 1: Not Relative |
+| 02 |Son/daughter | |
+| 03 |Stepson/stepdaughter | |
+| 04 |Brother/sister | |
+| 05 |Father/mother | |
+| 06 |Grandchild | |
+| 07 |Other Rel. | |
+| 08 |Roomer/boarder/foster Child | |
+| 09 |Housemate/roommate | |
+| 10 |Unmarried Partner | |
+| 11 |Other Nonrel. | |
+| 12 |Instit. Person | |
+| 13 |Other Pers. in Grp. Qtrs. | |
 
 iFertil
 No. of Chld. Ever Born
@@ -339,6 +402,9 @@ Vehicle Occupancy
 
 After Converting categorical variable into dummy/indicator variables:  (200000, 185)
 
+![](images/boxPlotAfter1.png)
+![](images/boxPlot_after_2.png)
+
 ### New Columns
 
 We create a new column called military. This column has 2 values 0 (no), 1(yes).
@@ -359,10 +425,21 @@ TODO: HOPKINS TEST
 We perform PCA only for visuale perposes.
 TODO: add plot as image
 
+![](images/pcaVarianceRation.png)
+![](images/pcaDistribution.png)
+
 ## K-Means Clustering
-TODO: add elbot plot as image
+
+![](images/elbowMethod.png)
+![](images/kMeans.png)
 
 ## Hierachical Clustering
+
+![](images/agglomerativeHierarchicalClustering.png)
+
+## Dendogram
+
+![](images/dendogram.png)
 
 ## DBSCAN
 
@@ -374,10 +451,10 @@ In order to calculate the distance from each point to its closest  neighbor we a
 
 | Model | Inertia | Silhouette |
 | --- | --- | --- |
-| kmeans | | | 
-| gmm | | |
-| hierarchy | | |
-| dbscan | | |
+| kmeans: | | | 
+| gmm: | | |
+| hierarchy: | | |
+| dbscan: | | |
 
 ## Cluster Characterization
 

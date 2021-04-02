@@ -19,7 +19,7 @@ import os
 elapsed_time = {"kmeans": [],"gmm": [] ,"hierarchy": [],"dbscan": [] } # Copute the computational time of every algorith
 missing_values = ['n/a', 'na', '--', '?'] # pandas only detect NaN, NA,  n/a and values and empty shell
 my_path = os.path.abspath(os.path.dirname(__file__))
-df=pd.read_csv(r''+my_path+'\\data\\USCensus1990.data.txt', sep=',', nrows=200000, na_values=missing_values)
+df=pd.read_csv(r''+my_path+'\\data\\USCensus1990.data.txt', sep=',', nrows=2000, na_values=missing_values)
 print('initial shape: ', df.shape) 
 
 def plotElbowMethod(X): 
@@ -169,66 +169,31 @@ df.drop('iRelat2', axis=1, inplace=True) # since tha most cases are N/a Gq/not O
 # df.drop(index=df[(df['dAncstry2'] >= 4) & (df['dAncstry2'] <= 11)].index, inplace=True) # since we have few rows for that values 
 # df.drop(index=df[(df['dRpincome'] == 1)].index, inplace=True) # since we have few rows for that values 
 
-# REMPLPAR
-# Employment Stat. of Parents
-# 000: N/a Not Own Child of Hshldr., and Not Ch
-# 111: Both Parents At Work 35 or More Hrs.
-# 112: Father Only At Work 35 or More Hrs.
-# 113: Mother Only At Work 35 or More Hrs.
-# 114: Neither Parent At Work 35 or More Hrs.
-# 121: Father At Work 35 or More Hrs.
-# 122: Father Not At Work 35 or More Hrs.
-# 133: Mother At Work 35 or More Hrs.
-# 134: Mother Not At Work 35 or More Hrs.
-# 141: Neither Parent in Labor Force
-# 211: Father At Work 35 or More Hrs.
-# 212: Father Not At Work 35 or More Hrs.
-# 213: Father Not in Labor Force
-# 221: Mother At Work 35 or More Hrs.
-# 222: Mother Not At Work 35 or More Hrs.
-# 223: Mother Not in Labor Force
+# iRemplpar
+# 0: Both Parents Works
+# 1: Only Father Works
+# 2: Only Mather Works
+# 3: Neither Parent Works
 df.loc[df['iRemplpar'] == 111] = 0  # Both Parents Works
 df.loc[(df['iRemplpar'] == 112) | (df['iRemplpar'] == 121) | (df['iRemplpar'] == 122) | (df['iRemplpar'] == 211) | (df['iRemplpar'] == 212) | (df['iRemplpar'] == 213) , 'iRemplpar'] = 1 # Only Father Works
 df.loc[(df['iRemplpar'] == 113) | (df['iRemplpar'] == 133) | (df['iRemplpar'] == 134) | (df['iRemplpar'] == 221) | (df['iRemplpar'] == 222) | (df['iRemplpar'] == 223) , 'iRemplpar'] = 2 # Only Mather Works
 df.loc[(df['iRemplpar'] == 114) | (df['iRemplpar'] == 141) , 'iRemplpar'] = 3 # Neither Parent Works
 
-# RELAT1
-# Rel. or Not Related or Grp. Qtrs.
-# 00: Hshldr.
-# 01: Husband/wife
-# 02: Son/daughter
-# 03: Stepson/stepdaughter
-# 04: Brother/sister
-# 05: Father/mother
-# 06: Grandchild
-# 07: Other Rel.
-# 08: Roomer/boarder/foster Child
-# 09: Housemate/roommate
-# 10: Unmarried Partner
-# 11: Other Nonrel.
-# 12: Instit. Person
-# 13: Other Pers. in Grp. Qtrs.
-df.loc[(df['iRelat1'] >= 0) & (df['iRelat1'] <= 6) , 'iRelat1'] = 1 # Relative
+# iRelat1
+# Relative : 0
+# No Relative : 1
+df.loc[(df['iRelat1'] >= 0) & (df['iRelat1'] <= 6) , 'iRelat1'] = 0 # Relative
 df.loc[(df['iRelat1'] >= 7) & (df['iRelat1'] <= 12) , 'iRelat1'] = 1 # No Relative
 
-# RIDERS
-# Vehicle Occupancy
-# 0:N/a Not a Worker or Worker Whose Means o
-# 1:Drove Alone
-# 2:2 People
-# 3:3 People
-# 4:4 People
-# 5:5 People
-# 6:6 People
-# 7:7 to 9 People
-# 8:10 or More People
+# iRiders
+# 0: N/a Not a Worker or Worker Whose Means o
+# 1: Drove Alone
+# 2: More than 2 people
 df.loc[(df['iRiders'] >= 2) & (df['iRiders'] <= 8) , 'iRiders'] = 2 # more than 2 people
 
-# TMPABSNT
-# Temp. Absence From Work
+# iTmpabsnt
 # 0: N/a Less Than 16 Yrs. Old/at Work/did No
-# 1: Yes, on Layoff
-# 2: Yes, on Vacation, Temp. Illness, Labor D
+# 1: Yes
 # 3: No
 df.loc[(df['iTmpabsnt'] == 1) | (df['iTmpabsnt'] == 2) , 'iTmpabsnt'] = 1
 df.loc[(df['iTmpabsnt'] == 3) , 'iTmpabsnt'] = 2
