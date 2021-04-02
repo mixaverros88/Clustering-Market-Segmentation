@@ -1,19 +1,18 @@
 
-# Exploratory Data Analysis
+## Data description
 
-The USCensus19910raw data set, it is a multivariate dataset which consist of 124 feature, the 54 is categorical.
+The USCensus19910raw data set, it is a multivariate dataset which consist of 69 categorical feature and 2458285 rows.
 https://archive.ics.uci.edu/ml/datasets/US+Census+Data+%281990%29
-
-## Data Description
 
 | Dataset     | Instances   | Features|
 | ------------|:-----------:| -------:|
-| Original    | 2.458.285   | 125     |
+| Original    | 2.458.285   | 69      |
 | New         | centered    | 14      |
 
 As we can observe the dataset is equally distributed among sex.
-
+Print missing values: 0
 TODO: visualize income, age, sex distribution
+TODO: add box-plot from every column
 
 ![alt text](https://raw.githubusercontent.com/mixaverros88/Clustering-Market-Segmentation/main/images/sexdist.png?token=ACYAUFMLJRSCJQMYUHMCYZ3AKGR4G)
 
@@ -338,21 +337,26 @@ Vehicle Occupancy
 | 7:7 to 9 People | |
 | 8:10 or More People | |
 
+After Converting categorical variable into dummy/indicator variables:  (200000, 185)
+
 ### New Columns
-We create a new column called War. This column has 2 values 0 (no), 1(yes).
+
+We create a new column called military. This column has 2 values 0 (no), 1(yes).
 This column indicates if the person takes place at least in one war. 
 In order to fill the War column we use the following columns
 iFeb55,iKorean,iMay75880,iRvetserv,iSept80,iVietnam,iWWII
 
 ### Drop Colums
 
-We drop the columns (iFeb55,iKorean,iMay75880,iRvetserv,iSept80,iVietnam,iWWII) that has information about in what war a person has involved since we add this information in war column.
+We drop the columns (iFeb55,iKorean,iMay75880,iRvetserv,iSept80,iVietnam,iWWII) that has information about in what war a person has involved since we add this information in military column.
+
+### Hopkins Test
 
 TODO: HOPKINS TEST
 
 ## Principal Components Analysis
-By reducing the number of features, we’re improving the performance of our algorithm. 
-we need to decide how many features we’d like to keep based on the cumulative variance plot
+
+We perform PCA only for visuale perposes.
 TODO: add plot as image
 
 ## K-Means Clustering
@@ -361,12 +365,13 @@ TODO: add elbot plot as image
 ## Hierachical Clustering
 
 ## DBSCAN
-How to compute min_samples?
+
 I didn't find an automatic way to compute the min_sample.
 A rule of thumb in order to compute the min_sample for high dimensonal dataset is to multimply the columns by 2.
 In order to calculate the distance from each point to its closest  neighbor we are using the NearestNeighbors
 
-## Evaluation
+## Models Evaluation
+
 | Model | Inertia | Silhouette |
 | --- | --- | --- |
 | kmeans | | | 
@@ -377,6 +382,7 @@ In order to calculate the distance from each point to its closest  neighbor we a
 ## Cluster Characterization
 
 ## Computation Time
+
 | Model | Time (in seconds) |
 | --- | --- |
 | kmeans | |

@@ -19,8 +19,46 @@ import os
 elapsed_time = {"kmeans": [],"gmm": [] ,"hierarchy": [],"dbscan": [] } # Copute the computational time of every algorith
 missing_values = ['n/a', 'na', '--', '?'] # pandas only detect NaN, NA,  n/a and values and empty shell
 my_path = os.path.abspath(os.path.dirname(__file__))
-df=pd.read_csv(r''+my_path+'\\data\\USCensus1990.data.txt', sep=',', nrows=2000, na_values=missing_values)
+df=pd.read_csv(r''+my_path+'\\data\\USCensus1990.data.txt', sep=',', nrows=200000, na_values=missing_values)
 print('initial shape: ', df.shape) 
+
+def plotElbowMethod(X): 
+    # Plot Elbow Method
+    wcss=[]
+    for i in range(1,13):
+        kmeans_pca=KMeans(n_clusters=i,init='k-means++',random_state=200)
+        kmeans_pca.fit(X)
+        wcss.append(kmeans_pca.inertia_) # The lowest SSE value
+
+    plt.plot(range(1,13),wcss, marker='o', linestyle ='--')
+    plt.xlabel('Number of Clusters')
+    plt.ylabel('WCSS')
+    plt.title('Elbow Method')
+    plt.show()
+
+
+def plotSilhouette(X):
+    kmeans_kwargs = {
+        "init": "random",
+        "n_init": 10,
+        "max_iter": 300,
+        "random_state": 42,
+    }
+     # A list holds the silhouette coefficients for each k
+    silhouette_coefficients = []
+
+    # Notice you start at 2 clusters for silhouette coefficient
+    for k in range(2, 11):
+        kmeans = KMeans(n_clusters=k, **kmeans_kwargs)
+        kmeans.fit(scaled_features)
+        score = metrics.silhouette_score(scaled_features, kmeans.labels_)
+        silhouette_coefficients.append(score)
+
+    plt.plot(range(2, 11), silhouette_coefficients)
+    plt.xticks(range(2, 11))
+    plt.xlabel("Number of Clusters")
+    plt.ylabel("Silhouette Coefficient")
+    plt.show()
 
 def displayBoxPlots(df, *dropColums):
     vizualiseDF=df.copy()
@@ -111,7 +149,7 @@ for index,group in groupedByUserId: # loop through every row and if a user a lea
         df.loc[ df['caseid']== index, 'military'] = 0
 
 # Print missing values
-print('Print missing values', df.isnull().values.sum())
+print('Print missing values: ', df.isnull().values.sum())
 
 # Drop Military related columns 
 df.drop('iFeb55', axis=1, inplace=True) 
@@ -401,18 +439,8 @@ plt.show()
 
 ############################################################### Partitional clustering: KMEANS ##########################################################################
 
-# Plot Elbow Method
-wcss=[]
-for i in range(1,13):
-    kmeans_pca=KMeans(n_clusters=i,init='k-means++',random_state=200)
-    kmeans_pca.fit(X)
-    wcss.append(kmeans_pca.inertia_)
-
-plt.plot(range(1,13),wcss, marker='o', linestyle ='--')
-plt.xlabel('Number of Clusters')
-plt.ylabel('WCSS')
-plt.title('Elbow Method')
-plt.show()
+plotSilhouette(X)
+plotElbowMethod(X)
 
 # Selecting optimal number of clusters in KMeans
 for i in range(2,13):
@@ -426,7 +454,9 @@ end_kmeans = time.time()
 
 characterizeCluster(df.copy(), y_predicted)
 km.cluster_centers_ # get cluster centers
-print ('KMEANS Inertia Score: ',round(km.inertia_,3)) # inertia: lower values are better
+km.n_iter_# The number of iterations required to converge
+print ('KMEANS Inertia Score: ',round(km.inertia_,3)) # The lowest SSE value
+# The silhouette coefficient is a measure of cluster cohesion and separation
 print ('KMEANS Silhouette Score: ', round(np.mean(metrics.silhouette_samples(X, y_predicted)),3)) # Silhouette: higher values are better
 
 principal_cencus_Df['cluster_kmeans']=y_predicted
@@ -469,7 +499,7 @@ print('Estimated number of clusters: %d' % n_clusters_)
 print('Estimated number of noise points: %d' % n_noise_)
 
 silhouette_values = metrics.silhouette_samples(X, clusters)
-print ('DBSCAN Silhouette Score:', np.mean(silhouette_values))
+print ('DBSCAN Silhouette Score:', round(np.mean(silhouette_values),3)) # Silhouette: higher values are better
 
 # Visualising the clusters
 colors = ['royalblue', 'maroon', 'forestgreen', 'mediumorchid', 'tan', 'deeppink', 'olive', 'goldenrod', 'lightcyan', 'navy']
@@ -491,6 +521,8 @@ y_hc = hc.fit_predict(X)
 end_hierarchy = time.time()
 principal_cencus_Df = principal_cencus_Df.values 
 
+print ('Agglomerative Hierarchical Silhouette Score: ', round(np.mean(metrics.silhouette_samples(X, y_hc)),3)) # Silhouette: higher values are better
+
 # Visualising the clusters
 plt.scatter(principal_cencus_Df[y_hc == 0, 0], principal_cencus_Df[y_hc == 0, 1], s = 50, c = 'red', label = 'Careful')
 plt.scatter(principal_cencus_Df[y_hc == 1, 0], principal_cencus_Df[y_hc == 1, 1], s = 50, c = 'blue', label = 'Standard')
@@ -510,7 +542,7 @@ end_gmm = time.time()
 
 # print('Gaussian Mixture Model labels',labels)
 # print('gmm.means_\n', gmm.means_)
-print ("Gaussian Mixture Silhouette Score: ", metrics.silhouette_score(X, labels))
+print ("Gaussian Mixture Silhouette Score: ", round(metrics.silhouette_score(X, labels),3)) # Silhouette: higher values are better
 
 # Visualising the clusters
 plt.scatter(principal_cencus_Df[labels == 0, 0], principal_cencus_Df[labels == 0, 1], s = 50, c = 'red', label = 'Careful')
