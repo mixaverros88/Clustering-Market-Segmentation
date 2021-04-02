@@ -17,6 +17,7 @@ https://archive.ics.uci.edu/ml/datasets/US+Census+Data+%281990%29
 Another observation from the graph concerns the domains of the two variables Age and Income. We understand that the domain for Age is from around 20 to 70, whereas for Income it is from around 40,000 to over 300,000. Which points to a vast difference between the range of these values. Therefore, we must incorporate an important step in our analysis, and we must first standardize our data. Standardization is an important part of data preprocessing, which is why we’ve devoted the entire next paragraph precisely to this topic.
 
 iCitizen
+
 Citizenship
 | Initial | Converted |
 | --- | --- |
@@ -27,6 +28,7 @@ Citizenship
 | 4: Not a Citizen of the U.s| |
 
 iClass
+
 Class of Worker
 | Initial | Converted |
 | --- | --- |
@@ -42,6 +44,7 @@ Class of Worker
 | 9: Unemp., Last Worked in 1984 or Earlier| |
  
 iEnglish
+
 Ability to Speak English
 | Initial | Converted |
 | --- | --- |
@@ -52,6 +55,7 @@ Ability to Speak English
 | 4:Not At All| |
 
 RIDERS
+
 Vehicle Occupancy
 | Initial | Converted |
 | --- | --- |
@@ -65,8 +69,9 @@ Vehicle Occupancy
 | 7:7 to 9 People | |
 | 8:10 or More People | |
 
-| REMPLPAR
-| Employment Stat. of Parents
+REMPLPAR
+
+Employment Stat. of Parents
 | Initial | Converted |
 | --- | --- |
 | 000: N/a Not Own Child of Hshldr., and Not Ch | 0: Both Parents Works |
@@ -87,15 +92,18 @@ Vehicle Occupancy
 | 223: Mother Not in Labor Force | |
 
 TMPABSNT
+
+Temp. Absence From Work 
 | Initial | Converted |
 | --- | --- |
-| Temp. Absence From Work | 0: N/a Less Than 16 Yrs. Old/at Work/did No |
-| 0: N/a Less Than 16 Yrs. Old/at Work/did No | 1: Yes |
-| 1: Yes, on Layoff | 3: No |
-| 2: Yes, on Vacation, Temp. Illness, Labor D | |
+| Temp. Absence From Work |  |
+| 0: N/a Less Than 16 Yrs. Old/at Work/did No | 0: N/a Less Than 16 Yrs. Old/at Work/did No |
+| 1: Yes, on Layoff | 1: Yes |
+| 2: Yes, on Vacation, Temp. Illness, Labor D | 2: No |
 | 3: No | |
 
 RELAT1
+
 Rel. or Not Related or Grp. Qtrs.
 | Initial | Converted |
 | --- | --- |
@@ -115,6 +123,7 @@ Rel. or Not Related or Grp. Qtrs.
 | 13 |Other Pers. in Grp. Qtrs. | |
 
 iFertil
+
 No. of Chld. Ever Born
 | Initial | Converted |
 | --- | --- |
@@ -134,6 +143,7 @@ No. of Chld. Ever Born
 | 13:12 or More Chld. | |
 
 iYearsch
+
 Ed. Attainment
 | Initial | Converted |
 | --- | --- |
@@ -157,11 +167,12 @@ Ed. Attainment
 | 17: Doctorate Degree | |
 
 iRspouse
+
 Married, Spouse Present/spouse Absent
 | Initial | Converted |
 | --- | --- |
-| 0: N/a Less Than 15 Yrs. Old | :0 No |
-| 1: Now Married, Spouse Present | :1 Yes |
+| 0: N/a Less Than 15 Yrs. Old | 0: No |
+| 1: Now Married, Spouse Present | 1: Yes |
 | 2: Now Married, Spouse Absent | |
 | 3: Widowed | |
 | 4: Divorced | |
@@ -169,6 +180,7 @@ Married, Spouse Present/spouse Absent
 | 6: Never Married | |
 
 MEANS
+
 Means of Transportation to Work 
 | Initial | Converted |
 | --- | --- |
@@ -187,6 +199,7 @@ Means of Transportation to Work
 | 12: Other Method | |
 
 MILITARY
+
 Military Srvc.
 | Initial | Converted |
 | --- | --- |
@@ -197,12 +210,14 @@ Military Srvc.
 | 4:No Srvc.| |
 
 YRSSERV
+
 Yrs. of Active Duty Military Srvc.
 |0 = | |
 |1 < 5 | |
 |2 else | |
 
 LANG1
+
 Language Other Than English At Home
 | Initial | Converted |
 | --- | --- |
@@ -211,6 +226,7 @@ Language Other Than English At Home
 | 2:No, Speaks Only English | |
 
 MOBILITY
+
 Mobility Stat. Lived Here on April 1, 19
 | Initial | Converted |
 | --- | --- |
@@ -220,6 +236,7 @@ Mobility Stat. Lived Here on April 1, 19
 
 
 FERTIL
+
 No. of Chld. Ever Born
 | Initial | Converted |
 | --- | --- |
@@ -239,6 +256,7 @@ No. of Chld. Ever Born
 | 13:12 or More Chld. | |
 
 RSPOUSE
+
 Married, Spouse Present/spouse Absent
 | Initial | Converted |
 | --- | --- |
@@ -251,6 +269,7 @@ Married, Spouse Present/spouse Absent
 |6:Never Married | |
 
 iPerscare
+
 Personal Care Limitation
 | Initial | Converted |
 | --- | --- |
@@ -259,6 +278,7 @@ Personal Care Limitation
 |2:No, Does Not Have a Personal Care Limita | |
 
 REARNING
+
 Total Pers. Earnings
 | Initial | Converted |
 | --- | --- |
@@ -269,6 +289,7 @@ Total Pers. Earnings
 | 5 else | |
 
 dPwgt1
+
 Pers. Wgt
 | Initial | Converted |
 | --- | --- |
@@ -278,6 +299,7 @@ Pers. Wgt
 | 3 else | |
 
 LOOKING
+
 Looking for Work
 | Initial | Converted |
 | --- | --- |
@@ -286,6 +308,7 @@ Looking for Work
 | 2:No |  |
 
 AVAIL
+
 Available for Work
 | Initial | Converted |
 | --- | --- |
@@ -296,6 +319,7 @@ Available for Work
 | 4:Yes, Could Have Taken a Job | |
 
 SCHOOL
+
 School Enrollment
 | Initial | Converted |
 | --- | --- |
@@ -305,6 +329,7 @@ School Enrollment
 | 3: Yes, Private School, Private Coll. | |
 
 IMMIGR
+
 Yr. of Entry
 | Initial | Converted |
 | --- | --- |
@@ -321,6 +346,7 @@ Yr. of Entry
 |10:Before 1950 | |
 
 MARITAL
+
 Marital Stat.
 | Initial | Converted |
 | --- | --- |
@@ -331,6 +357,7 @@ Marital Stat.
 | 4:Never Married or Under 15 Yrs. Old | |
 
 RAGECHLD
+
 Presence and Age of Own Chld.
 | Initial | Converted |
 | --- | --- |
@@ -341,6 +368,7 @@ Presence and Age of Own Chld.
 | 4:No Own Chld. .incl. Females Under 16 Yrs | |
 
 dTravtime
+
 Temp. Absence From Work
 | Initial | Converted |
 | --- | --- |
@@ -353,6 +381,7 @@ Temp. Absence From Work
 | else 6 | |
 
 RPOB
+
 Place of Birth Recode
 | Initial | Converted |
 | --- | --- |
@@ -372,6 +401,7 @@ Place of Birth Recode
 | 52: Not a Citizen | |
 
 dDepart
+
 Time of Departure for Work Hour and Minu
 | Initial | Converted |
 | --- | --- |
@@ -383,6 +413,7 @@ Time of Departure for Work Hour and Minu
 |5 else | |
 
 RIDERS
+
 Vehicle Occupancy
 | Initial | Converted |
 | --- | --- |
