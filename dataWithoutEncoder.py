@@ -58,6 +58,12 @@ df.drop('iSubfam1', axis=1, inplace=True) # drop both iSubfam1, iSubfam2 since i
 df.drop('iSubfam2', axis=1, inplace=True)
 df.drop('dHispanic', axis=1, inplace=True) # since tha most cases are not hispanic
 df.drop('iRelat2', axis=1, inplace=True) # since tha most cases are N/a Gq/not Other Rel.
+# df.drop(index=df[(df['dAncstry1'] >= 4) & (df['dAncstry1'] <= 10)].index, inplace=True) # since we have few rows for that values 
+# df.drop(index=df[(df['dAncstry2'] >= 4) & (df['dAncstry2'] <= 11)].index, inplace=True) # since we have few rows for that values 
+# df.drop(index=df[(df['dRpincome'] == 1)].index, inplace=True) # since we have few rows for that values 
+# df.drop('dAncstry1', axis=1, inplace=True)
+# df.drop('dAncstry2', axis=1, inplace=True)
+# df.drop('dRpincome', axis=1, inplace=True)
 
 # iRemplpar
 # 0: Both Parents Works
@@ -237,16 +243,24 @@ df.loc[df['iRPOB'] == 52, 'iRPOB'] = 1
 print('Count all the unique values after pre-processing: ', df.nunique().sum())
 displayBoxPlots(df) 
 
-########################################################################## Transform Categorical Data ##########################################################################
+# Visualize Raw Data
+# plt.scatter(df['dAge'], df['dIncome1'])
+# plt.xlabel('Age')
+# plt.ylabel('Income')
+# plt.title('Age and income distribution')
+# plt.show()
+
+# for column in df:
+#     plt.boxplot(df[column])
+#     plt.title(column)
+#     plt.show()
+
+# for column in df:
+#     sns.countplot(data=df, x=df[column])
+#     plt.title('Count the distribution of '+ column + ' Feature')
+#     plt.show()
 
 transformedDF = df.copy()
-for column in transformedDF:
-    catLen = len(transformedDF[column].value_counts().index) # count the categorical values per column since is not need to convert the columns that has only 2 classes
-    if catLen > 2:
-        transformedDF = pd.get_dummies(transformedDF, columns=[column], prefix=[column] )
-
-print('After Converting categorical variable into dummy/indicator variables: ', transformedDF.shape) 
-
 
 ########################################################################## Scale Data ##########################################################################
 
@@ -277,7 +291,7 @@ principalComponents_breast = pca_cencus.fit_transform(X)
 principal_cencus_Df = pd.DataFrame(data = principalComponents_breast
              , columns = ['principal component 1', 'principal component 2', 'principal component 3', 'principal component 4', 'principal component 5', 'principal component 6', 'principal component 7', 'principal component 8', 'principal component 9', 'principal component 10'])
 
-# print('explained_variance_ratio_', pca_cencus.explained_variance_ratio_)
+print('explained_variance_ratio_', pca_cencus.explained_variance_ratio_)
 
 plt.scatter(principal_cencus_Df['principal component 1'],principal_cencus_Df['principal component 2'])
 plt.title('PCA Distribution')
@@ -287,24 +301,27 @@ plt.show()
 
 ############################################################### Partitional clustering: KMEANS ##########################################################################
 
-# plotSilhouette(X, scaled_features)
-# plotElbowMethod(X)
-# computeSilhouetteScore(X)
+#plotSilhouette(X, scaled_features)
+plotElbowMethod(X)
+
+# Selecting optimal number of clusters in KMeans
+for i in range(2,10):
+    kMeans_labels=KMeans(n_clusters=i,init='k-means++',random_state=200).fit(X).labels_
+    print('Silhouette score for k(clusters): '+str(i)+' is '+str(metrics.silhouette_score(X,kMeans_labels,metric='euclidean',sample_size=1000,random_state=200)))
 
 start_kmeans = time.time()
 km = KMeans(n_clusters=3,init='k-means++',random_state=200)
-kmeasPredictedLabels = km.fit_predict(X)
+y_predicted = km.fit_predict(X)
 end_kmeans = time.time()
 
-#km.cluster_centers_ # get cluster centers
-#km.n_iter_# The number of iterations required to converge
+#characterizeCluster(df.copy(), y_predicted)
+km.cluster_centers_ # get cluster centers
+km.n_iter_# The number of iterations required to converge
+print ('KMEANS Inertia Score: ',round(km.inertia_,3)) # The lowest SSE value
+# The silhouette coefficient is a measure of cluster cohesion and separation
+print ('KMEANS Silhouette Score: ', round(np.mean(metrics.silhouette_samples(X, y_predicted)),3)) # Silhouette: higher values are better
 
-print ('KMEANS Inertia Score: ',round(km.inertia_,2)) # The lowest SSE value
-print ('KMEANS Silhouette Score: ', round(np.mean(metrics.silhouette_samples(X, kmeasPredictedLabels)),2)) # Silhouette: higher values are better
-
-principal_cencus_Df['cluster_kmeans'] = kmeasPredictedLabels # add predicted clusters
-
-# Visualize Clusters
+principal_cencus_Df['cluster_kmeans']=y_predicted
 df1 = principal_cencus_Df[principal_cencus_Df.cluster_kmeans==0]
 df2 = principal_cencus_Df[principal_cencus_Df.cluster_kmeans==1]
 df3 = principal_cencus_Df[principal_cencus_Df.cluster_kmeans==2]
@@ -319,7 +336,7 @@ plt.show()
 
 # Plot Parallel Coordinate plot for the Centroids
 columnIndexes = []
-columns = ["dAge_0","dAge_1","dAge_2","dAge_3","dAge_4","dAge_5","dAge_6","dAge_7", "dIncome1_0","dIncome1_1","dIncome1_2","dIncome1_3","dIncome1_4", "iSex", "iCitizen", "iMarital", "iFertil_0","iFertil_1","iFertil_2"]
+columns = ["dAge","dIncome1", "iSex", "iCitizen", "iMarital", "iFertil"]
 for col in columns:
     columnIndexes.append(transformedDF.columns.get_loc(col))
 
@@ -328,33 +345,40 @@ centroids = pd.DataFrame(km.cluster_centers_[:, columnIndexes], columns=columns)
 centroids['cluster'] = centroids.index
 display_parallel_coordinates_centroids(centroids, 3)
 
-principal_cencus_Df.drop('cluster_kmeans',axis=1,inplace=True) # delete unneeded column
+print('principal_cencus_Df.shape', principal_cencus_Df.shape)
+principal_cencus_Df.drop('cluster_kmeans',axis=1,inplace=True)
 ############################################################## Density-based clustering: DBSCAN ##########################################################################
 
-# calculateNearestNeighbors(X)
-# computeEps(X,[14,15,16,17,18,19,20,21])
-# computeMinSamples(X,[30,35,36,37,38,39,45,50])
+# https://towardsdatascience.com/machine-learning-clustering-dbscan-determine-the-optimal-value-for-epsilon-eps-python-example-3100091cfbc
+# https://www.kdnuggets.com/2020/04/dbscan-clustering-algorithm-machine-learning.html
+# https://medium.com/@tarammullin/dbscan-parameter-estimation-ff8330e3a3bd
+
+#alculateNearestNeighbors(X)
+#omputeEps(X,[4,5,6,7,8,9,10,11,12,13,14])
+#omputeMinSamples(X,[30,35,36,37,38,39,45,50])
 
 start_dbscan = time.time()
-dbscan = DBSCAN(eps=20, min_samples=36)
-dbscanPredictedLabels = dbscan.fit_predict(X)
+dbscan = DBSCAN(eps=8, min_samples=35)
+dbscan.fit(X)
+y_pred = dbscan.fit_predict(X)
 end_dbscan = time.time()
 
 clusters = dbscan.labels_ # The labels_ property contains the list of clusters and their respective points.
 
 n_clusters_ = len(set(clusters)) - (1 if -1 in clusters else 0) # Number of clusters in labels, ignoring noise if present.
 n_noise_ = list(clusters).count(-1)
+clusters = dbscan.labels_
+
 print('Estimated number of clusters: %d' % n_clusters_)
 print('Estimated number of noise points: %d' % n_noise_)
-
 silhouette_values = metrics.silhouette_samples(X, clusters)
-print('DBSCAN Silhouette Score:', round(np.mean(silhouette_values),2)) # Silhouette: higher values are better
+print ('DBSCAN Silhouette Score:', round(np.mean(silhouette_values),3)) # Silhouette: higher values are better
+print('clusters: ', clusters)
 
-principal_cencus_Df['cluster_dbscan']=dbscanPredictedLabels # add predicted clusters
+principal_cencus_Df['cluster_dbscan']=y_pred
+print('principal_cencus_Df.groupby([\'cluster_dbscan\']).size()',principal_cencus_Df.groupby(['cluster_dbscan']).size()) 
+print('principal_cencus_Df.cluster_dbscan ', principal_cencus_Df.cluster_dbscan.nunique())
 
-print('DBSCAN size per cluster',principal_cencus_Df.groupby(['cluster_dbscan']).size()) 
-
-# Visualize Data
 df1 = principal_cencus_Df [ principal_cencus_Df.cluster_dbscan== 0  ]
 df2 = principal_cencus_Df [ principal_cencus_Df.cluster_dbscan== 1  ]
 df3 = principal_cencus_Df [ principal_cencus_Df.cluster_dbscan== 2  ]
@@ -369,114 +393,74 @@ plt.title('DBSCAN Clustering')
 plt.legend()
 plt.show()
 
-principal_cencus_Df.drop('cluster_dbscan',axis=1,inplace=True) # delete unneeded column
 #################################################### Hierarchical clustering:Agglomerative Hierarchical Clustering #######################################################
 
-hiercluster = AgglomerativeClustering(affinity='euclidean', linkage='ward', compute_full_tree=True) # Create a hierarchical clustering model
-#findNumberOfClusterInHierarchical(hiercluster,[2,3,4],X) # run the model for several clusters 
-
-# Read off 8 clusters:
-hiercluster.set_params(n_clusters=3)
-clusters = hiercluster.fit_predict(X) 
-print('Count of data points in each cluster\n', np.bincount(clusters)) # count of data points in each cluster
-
-print ('Agglomerative Hierarchical Silhouette Score from 3 clusters : ', round(np.mean(metrics.silhouette_samples(X, clusters)),2)) # Silhouette: higher values are better
-
-# Add cluster number to the original data
-X_scaled_clustered = pd.DataFrame(X, columns=transformedDF.columns, index=transformedDF.index)
-X_scaled_clustered['cluster'] = clusters
-
-# Find the size of the clusters
-print('Find the size of each cluster\n', X_scaled_clustered["cluster"].value_counts())
-
-# Show a dendrogram, just for the first smallest cluster
-from scipy.cluster.hierarchy import linkage, fcluster 
-sample = X_scaled_clustered[X_scaled_clustered.cluster==0]
-Z = linkage(sample, 'ward') 
-names = sample.index 
-plot_dendrogram(Z, names, figsize=(10,15))
-
-# Generate An Image With the whole dendogram
-link_matrix = linkage(sample, 'ward')
-fig, ax = plt.subplots(1, 1, figsize=(20,200))
-ax.set_title('Hierarchical Clustering Dendrogram')
-ax.set_xlabel('distance')
-ax.set_ylabel('name')
-dendrogram(
-    link_matrix,
-    orientation='left',
-    leaf_rotation=0., 
-    leaf_font_size=12.,  
-    labels=sample.index.values
-)    
-ax.yaxis.set_label_position('right')
-ax.yaxis.tick_right()
-plt.savefig(r''+my_path+'\\images\\dendogram.png', dpi=320, format='png', bbox_inches='tight')
-
-X_scaled_clustered2 = pd.DataFrame(transformedDF.loc[columnIndexes], columns=columns, index=transformedDF.index)
-X_scaled_clustered2['cluster'] = clusters
-
-# Plot Parallel Coordinate plot for the Centroids
-means =  X_scaled_clustered2.groupby(by="cluster").mean()
-display_parallel_coordinates_centroids(means.reset_index(), 7)
+# Plot Dendrogram
+dendrogrm = sch.dendrogram(sch.linkage(X, method = 'ward'))
+plt.title('Dendrogram')
+plt.xticks(rotation=90) 
+plt.show()
 
 start_hierarchy = time.time()
-hierarchyPredictedLabels = hiercluster.fit_predict(X)
+hc = AgglomerativeClustering(n_clusters = 3, affinity = 'euclidean', linkage = 'ward')
+y_hc = hc.fit_predict(X)
 end_hierarchy = time.time()
+principal_cencus_Df = principal_cencus_Df.values 
 
-print ('Agglomerative Hierarchical Silhouette Score: ', round(np.mean(metrics.silhouette_samples(X, hierarchyPredictedLabels)),2)) # Silhouette: higher values are better
+print ('Agglomerative Hierarchical Silhouette Score: ', round(np.mean(metrics.silhouette_samples(X, y_hc)),3)) # Silhouette: higher values are better
 
-principal_cencus_Df['cluster_hierarchy'] = hierarchyPredictedLabels
-
-# Visualise Clusters
-df1 = principal_cencus_Df [ principal_cencus_Df.cluster_hierarchy == 0  ]
-df2 = principal_cencus_Df [ principal_cencus_Df.cluster_hierarchy == 1  ]
-df3 = principal_cencus_Df [ principal_cencus_Df.cluster_hierarchy == 2  ]
-plt.scatter(df1['principal component 1'],df1['principal component 2'],color='green',  label='cluster 1')
-plt.scatter(df2['principal component 1'],df2['principal component 2'],color='red',    label='cluster 2')
-plt.scatter(df3['principal component 1'],df3['principal component 2'],color='yellow', label='cluster 3')
+# Visualising the clusters
+plt.scatter(principal_cencus_Df[y_hc == 0, 0], principal_cencus_Df[y_hc == 0, 1], s = 50, c = 'red', label = 'Careful')
+plt.scatter(principal_cencus_Df[y_hc == 1, 0], principal_cencus_Df[y_hc == 1, 1], s = 50, c = 'blue', label = 'Standard')
+plt.scatter(principal_cencus_Df[y_hc == 2, 0], principal_cencus_Df[y_hc == 2, 1], s = 50, c = 'green', label = 'Target')
 plt.title('Agglomerative Hierarchical Clustering')
 plt.xlabel('Principal component 1')
 plt.ylabel('Principal component 2')
 plt.legend()
 plt.show()
 
-principal_cencus_Df.drop('cluster_hierarchy',axis=1,inplace=True) # delete unneeded column
+# Add the cluster number to the original scaled data
+first_split =transformedDF.sample(n=15, axis=1)
+X_clustered = pd.DataFrame(X[:, 0:15], index=first_split.index, columns=first_split.columns)
+X_clustered["cluster"] = y_hc
+
+print(X_clustered["cluster"].value_counts())
+# Show a dendrogram, just for the first smallest cluster
+from scipy.cluster.hierarchy import linkage, fcluster 
+sample = X_clustered[X_clustered.cluster==2]
+Z = linkage(sample, 'ward') 
+names = sample.index 
+plot_dendrogram(Z, names, figsize=(10,15))
+
 ########################################################################## Gaussian Mixture Model ############################################################
 
 start_gmm = time.time()
-gmm = GaussianMixture()
-#findNumberOfClusterInGaussianMixture(gmm,[2,3,4,5,6,7,8,9],X)
-gmm = GaussianMixture(n_components=3)
-labels = gmm.fit_predict(X)
+gmm = GaussianMixture(n_components=4).fit(X)
+labels = gmm.predict(X)
 end_gmm = time.time()
-principal_cencus_Df['cluster_gaussian']=labels # add predicted clusters
 
+# print('Gaussian Mixture Model labels',labels)
+# print('gmm.means_\n', gmm.means_)
 print ("Gaussian Mixture Silhouette Score: ", round(metrics.silhouette_score(X, labels),3)) # Silhouette: higher values are better
 
-# Visualise Clusters
-df1 = principal_cencus_Df [ principal_cencus_Df.cluster_gaussian== 0  ]
-df2 = principal_cencus_Df [ principal_cencus_Df.cluster_gaussian== 1  ]
-df3 = principal_cencus_Df [ principal_cencus_Df.cluster_gaussian== 2  ]
-plt.scatter(df1['principal component 1'],df1['principal component 2'],color='green',  label='cluster 1')
-plt.scatter(df2['principal component 1'],df2['principal component 2'],color='red',    label='cluster 2')
-plt.scatter(df3['principal component 1'],df3['principal component 2'],color='yellow', label='cluster 3')
+# Visualising the clusters
+plt.scatter(principal_cencus_Df[labels == 0, 0], principal_cencus_Df[labels == 0, 1], s = 50, c = 'red', label = 'Careful')
+plt.scatter(principal_cencus_Df[labels == 1, 0], principal_cencus_Df[labels == 1, 1], s = 50, c = 'blue', label = 'Standard')
+plt.scatter(principal_cencus_Df[labels == 2, 0], principal_cencus_Df[labels == 2, 1], s = 50, c = 'green', label = 'Target')
 plt.title('Gaussian Mixture Model')
 plt.xlabel('Principal component 1')
 plt.ylabel('Principal component 2')
 plt.legend()
 plt.show()
 
-principal_cencus_Df.drop('cluster_gaussian',axis=1,inplace=True) # delete unneeded column
-
 # TODO: plot likelihood
 # Evaluate Model Performance — Mean Silhouette Coefficient
 # https://medium.com/@tarammullin/dbscan-2788cfce9389
 
-elapsed_time["kmeans"].append(round(end_kmeans-start_kmeans,2))
-elapsed_time["gmm"].append(round(end_gmm-start_gmm,2))
-elapsed_time["hierarchy"].append(round(end_hierarchy-start_hierarchy,2))
-elapsed_time["dbscan"].append(round(end_dbscan-start_dbscan,2))
+# elapsed_time["kmeans"].append(round(end_kmeans-start_kmeans,2))
+# elapsed_time["gmm"].append(round(end_gmm-start_gmm,2))
+# elapsed_time["hierarchy"].append(round(end_hierarchy-start_hierarchy,2))
+# elapsed_time["dbscan"].append(round(end_dbscan-start_dbscan,2))
 
 for x in elapsed_time:
   print('Computation Time of ' + x + ':', elapsed_time[x])

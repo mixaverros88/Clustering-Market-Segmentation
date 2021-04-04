@@ -8,7 +8,6 @@ https://archive.ics.uci.edu/ml/datasets/US+Census+Data+%281990%29
 | ------------|:-----------:| -------:|
 | Original    | 2.458.285   | 68      |
 
-TODO: add functions.py
 TODO: missing values
 Unique Values: 398
 ### Box Plots for every feature

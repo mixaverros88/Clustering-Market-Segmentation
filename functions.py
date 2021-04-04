@@ -18,21 +18,12 @@ from pyclustertend import hopkins
 import time
 import os
 
-font = {'family' : 'normal','weight' : 'normal','size'   : 6}
-plt.rc('font', **font)
-elapsed_time = {"kmeans": [],"gmm": [] ,"hierarchy": [],"dbscan": [] } # Copute the computational time of every algorith
-missing_values = ['n/a', 'na', '--', '?'] # pandas only detect NaN, NA,  n/a and values and empty shell
-my_path = os.path.abspath(os.path.dirname(__file__))
-df=pd.read_csv(r''+my_path+'\\data\\USCensus1990.data.txt', sep=',', nrows=2000, na_values=missing_values)
-print('initial shape: ', df.shape) 
-
-palette = sns.color_palette("bright", 10)
+palette = sns.color_palette('bright', 10)
 
 def addAlpha(colour, alpha):
     '''Add an alpha to the RGB colour'''
     
     return (colour[0],colour[1],colour[2],alpha)
-
 
 def display_parallel_coordinates(df, num_clusters):
     '''Display a parallel coordinates plot for the clusters in df'''
@@ -44,7 +35,7 @@ def display_parallel_coordinates(df, num_clusters):
     
     # Create the plot
     fig = plt.figure(figsize=(12, 15))
-    title = fig.suptitle("Parallel Coordinates Plot for the Clusters", fontsize=18)
+    title = fig.suptitle('Parallel Coordinates Plot for the Clusters', fontsize=18)
     fig.subplots_adjust(top=0.95, wspace=0)
 
     # Display one plot for each cluster, with the lines for the main cluster appearing over the lines for the other clusters
@@ -68,7 +59,7 @@ def display_parallel_coordinates_centroids(df, num_clusters):
 
     # Create the plot
     fig = plt.figure(figsize=(12, 5))
-    title = fig.suptitle("Parallel Coordinates plot for the Centroids", fontsize=18)
+    title = fig.suptitle('Parallel Coordinates plot for the Centroids', fontsize=18)
     fig.subplots_adjust(top=0.9, wspace=0)
 
     # Draw the chart
@@ -104,16 +95,16 @@ def plot_dendrogram(Z, names, figsize=(10,25)):
     dendrogram(
         Z,
         labels = names,
-        orientation = "left",
+        orientation = 'left',
     )
     plt.show()
 
 def plotSilhouette(X,scaled_features):
     kmeans_kwargs = {
-        "init": "random",
-        "n_init": 10,
-        "max_iter": 300,
-        "random_state": 42,
+        'init': 'random',
+        'n_init': 10,
+        'max_iter': 300,
+        'random_state': 42,
     }
      # A list holds the silhouette coefficients for each k
     silhouette_coefficients = []
@@ -127,8 +118,9 @@ def plotSilhouette(X,scaled_features):
 
     plt.plot(range(2, 11), silhouette_coefficients)
     plt.xticks(range(2, 11))
-    plt.xlabel("Number of Clusters")
-    plt.ylabel("Silhouette Coefficient")
+    plt.xlabel('Number of Clusters')
+    plt.ylabel('Silhouette Coefficient')
+    plt.title('Silhouette')
     plt.show()
 
 def displayBoxPlots(df, *dropColums):
@@ -146,28 +138,6 @@ def displayBoxPlots(df, *dropColums):
         plt.xticks(rotation=90)
         plt.show()
 
-def characterizeCluster(originalDataFrame, clustersPredictions):
-    # Proceed to Demographic segmentations base on Age, Gender, Ethnicity, Income, Level of education, Religion, Profession/role in a company
-    columns = originalDataFrame.columns
-    originalDataFrame['cluster']=clustersPredictions
-    clusters = originalDataFrame.groupby(['cluster']) # group rows per cluster
-    print('Clusters Total Count: ', len(clusters))
-    for index,group in clusters:
-        clusterIndicator = str(group['cluster'].iloc[0] + 1)  # + 1 for view reasons since the numbering is starting from zero
-
-        demographicColumns = ['dAge','dIncome1','iSex','iYearsch','iCitizen']
-        for col in demographicColumns:
-            sns.countplot(data=df, x=group[col])
-            plt.title('Count the distribution of ' + col + ' Feature in cluster: ' + clusterIndicator)
-            plt.show()
-
-        plt.scatter(group['dAge'], group['dIncome1'],color='green', label='cluster ' + clusterIndicator)
-        plt.xlabel('Age')
-        plt.ylabel('Income')
-        plt.title('Age and Income distribution for Cluster: ' + clusterIndicator)
-        plt.legend()
-        plt.show()
-
 def calculateNearestNeighbors(X):
     # In order to calculate the distance from each point to its closest neighbor we are using the NearestNeighbors
     neigh = NearestNeighbors(n_neighbors=2)
@@ -183,30 +153,51 @@ def calculateNearestNeighbors(X):
     plt.plot(distances)
     plt.show()
 
-def computeMinSamples(X):
+def computeMinSamples(X,min_samples):
     # Compute best min_sample value
-    min_samples = [10, 11, 12, 13, 14, 15, 16, 17, 18, 25, 26]
+    #min_samples = [30,35,36,37,38,39,45,50]
     for i in min_samples:
         #print('min_samples value is ' + str(i))
-        db = DBSCAN(eps=18, min_samples=i).fit(X)
+        db = DBSCAN(eps=10, min_samples=i).fit(X)
         core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
         core_samples_mask[db.core_sample_indices_] = True
         # Ingoring the label '-1' as its for the outliers
         labels = set([label for label in db.labels_ if label >= 0])
         #print(set(labels))
-        print('For min_samples value = ' + str(i), 'Total no. of clusters are ' + str(len(set(labels))))
+        print('For min_samples value : ' + str(i), 'Total no. of clusters are ' + str(len(set(labels))))
 
-def computeEps(X):
+def computeEps(X, range_eps):
     # Compute best epsilon value, Find the bigest silhouette score
-    range_eps = [16,17,18,19]
+    #range_eps = [14,15,16,17,18,19,20,21]
     for i in range_eps:
         #print('eps value is ' + str(i))
-        db = DBSCAN(eps=i, min_samples=15).fit(X)
+        db = DBSCAN(eps=i, min_samples=45).fit(X)
         core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
         core_samples_mask[db.core_sample_indices_] = True
         labels = db.labels_
         #print(set(labels))
         silhouette_avg = metrics.silhouette_score(X, labels)
-        print('For eps value=' + str(i), labels, 'The average silhouette_score is : ', silhouette_avg)
+        print('For eps value :' + str(i), labels, 'The average silhouette_score is : ', silhouette_avg)
+        
+def findNumberOfClusterInHierarchical(hiercluster,clusterNumber,X):
+    for number in clusterNumber:
+        hiercluster.set_params(n_clusters=number)
+        clusters = hiercluster.fit_predict(X) 
+        print('Count of data points in each cluster for ' + str(number) + ' Clusters : ', np.bincount(clusters)) # count of data points in each cluster     
+        print ('Agglomerative Hierarchical Silhouette Score for ' + str(number) + ' Clusters : ', round(np.mean(metrics.silhouette_samples(X, clusters)),3)) # Silhouette: higher values are better
+
+def findNumberOfClusterInGaussianMixture(gmm,clusterNumber,X):
+    for number in clusterNumber:
+        gmm.set_params(n_components=number)
+        clusters = gmm.fit_predict(X) 
+        print('Count of data points in each cluster for ' + str(number) + ' Clusters : ', np.bincount(clusters)) # count of data points in each cluster     
+        print ('GaussianMixture Silhouette Score for ' + str(number) + ' Clusters : ', round(np.mean(metrics.silhouette_samples(X, clusters)),3)) # Silhouette: higher values are better
+
+def computeSilhouetteScore(X):
+    # Selecting optimal number of clusters in KMeans
+    for i in range(2,10):
+        kMeans_labels=KMeans(n_clusters=i,init='k-means++',random_state=200).fit(X).labels_
+        print('Silhouette score for k(clusters): '+str(i)+' is '+str(metrics.silhouette_score(X,kMeans_labels,metric='euclidean',sample_size=1000,random_state=200)))
+
 
 ########################################################################## END ##########################################################################
