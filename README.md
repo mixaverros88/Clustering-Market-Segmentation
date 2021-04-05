@@ -1,12 +1,12 @@
 
 ## Data description
 
-The USCensus19910raw data set, it is a multivariate dataset which consist of 68 categorical feature and 2458285 rows.
+The USCensus19910raw data set, it is a multivariate dataset which consist of 69 categorical feature and 2458285 rows.
 https://archive.ics.uci.edu/ml/datasets/US+Census+Data+%281990%29
 
 | Dataset     | Instances   | Features|
 | ------------|:-----------:| -------:|
-| Original    | 2.458.285   | 68      |
+| Original    | 2.458.285   | 69      |
 
 TODO: missing values
 Unique Values: 398
@@ -385,40 +385,141 @@ We perform PCA only for visuale perposes.
 
 ## K-Means Clustering
 
-![](images/elbowMethod.png)
+| Find best Silhouette |
+| --- |
+| Silhouette score for k(clusters): 2 is 0.15945270889922017 |
+| Silhouette score for k(clusters): 3 is 0.1615631355560528  |
+| Silhouette score for k(clusters): 4 is 0.13745000229998694 |
+| Silhouette score for k(clusters): 5 is 0.15019615475248088 |
+| Silhouette score for k(clusters): 6 is 0.13790214105830456 |
+| Silhouette score for k(clusters): 7 is 0.13568198336163323 |
+| Silhouette score for k(clusters): 8 is 0.11752498604907576 |
+| Silhouette score for k(clusters): 9 is 0.12401125139571349 |
 
+KMEANS Inertia Score:  2798546.27
+KMEANS Silhouette Score:  0.17
+
+![](images/elbowMethod.png)
+![](images/calculateSilhouette.png)
 ![](images/kMeans.png)
 
-## Hierachical Clustering
+### K-Means Cluster Characterization
+
+![](images/parallelCoordinatesKmeans.png)
+
+## Hierarchical Clustering
+
+| Find best Silhouette |
+| --- |
+| Count of data points in each cluster for 2 Clusters :  [15242  4758] |
+| Agglomerative Hierarchical Silhouette Score for 2 Clusters :  0.115 |
+| Count of data points in each cluster for 3 Clusters :  [4758 6884 8358] |
+| Agglomerative Hierarchical Silhouette Score for 3 Clusters :  0.152 |
+| Count of data points in each cluster for 4 Clusters :  [6884 3438 8358 1320] |
+| Agglomerative Hierarchical Silhouette Score for 4 Clusters :  0.141 |
+| Count of data points in each cluster[4758 6884 8358] |
+| Agglomerative Hierarchical Silhouette Score from 3 clusters :  0.15 |
+
+| Find the size of each cluster |
+| --- |
+| 2    8358 |
+| 1    6884 |
+| 0    4758 |
+
+Agglomerative Hierarchical Silhouette Score:  0.15
 
 ![](images/agglomerativeHierarchicalClustering.png)
 
-## Dendogram
+### Hierarchical Clustering Characterization
 
+![](images/parallelCoordinatesHierarchical.png)
+
+## Dendogram
+ 
 ![](images/dendogram.png)
+We cannot extract some information from dedogram , due to size of it.
 
 ## DBSCAN
 
-I didn't find an automatic way to compute the min_sample.
-A rule of thumb in order to compute the min_sample for high dimensonal dataset is to multimply the columns by 2.
-In order to calculate the distance from each point to its closest  neighbor we are using the NearestNeighbors
+![](images/calculateDistance.png)
 
-## Models Evaluation
+| Find eps |
+| --- |
+| For eps value :14 The average silhouette_score is :  0.14919125290937008 |
+| For eps value :15 The average silhouette_score is :  0.24975976161924904 |
+| For eps value :16 The average silhouette_score is :  0.2513016455791132  |
+| For eps value :17 The average silhouette_score is :  0.2928179697701456  |
+| For eps value :18 The average silhouette_score is :  0.2962309110420728  |
+| For eps value :19 The average silhouette_score is :  0.519202127144741   |
+| For eps value :20 The average silhouette_score is :  0.5208516747642558  |
+| For eps value :21 The average silhouette_score is :  0.44534270548494925 |
 
-| Model | Inertia | Silhouette |
-| --- | --- | --- |
-| kmeans: | | | 
-| gmm: | | |
-| hierarchy: | | |
-| dbscan: | | |
+| Find min_sample |
+| --- |
+| For min_samples value : 30 Total no. of clusters are 6 |
+| For min_samples value : 35 Total no. of clusters are 5 |
+| For min_samples value : 36 Total no. of clusters are 5 |
+| For min_samples value : 37 Total no. of clusters are 5 |
+| For min_samples value : 38 Total no. of clusters are 5 |
+| For min_samples value : 39 Total no. of clusters are 5 |
+| For min_samples value : 45 Total no. of clusters are 3 |
+| For min_samples value : 50 Total no. of clusters are 4 |
 
-## Cluster Characterization
+Estimated number of clusters: 3
+Estimated number of noise points: 198
+DBSCAN Silhouette Score: 0.45
 
-## Computation Time
+Size per cluster
+| Cluster |  Size |
+| ---     | --    |
+| -1      |   198 |
+|  0      | 19718 |
+|  1      |    46 |
+|  2      |    38 |
+
+![](images/dbscan.png)
+
+We observe that one class has all the observations, therefore we can assume that the dscan cannot perform good clustering.
+
+## Gaussian Mixture
+
+| Find best Silhouette |
+| --- |
+| Count of data points in each cluster for 2 Clusters :  [10817  9183] |
+| GaussianMixture Silhouette Score for 2 Clusters :  0.161 |
+| Count of data points in each cluster for 3 Clusters :  [6048 9044 4908] |
+| GaussianMixture Silhouette Score for 3 Clusters :  0.166 |
+| Count of data points in each cluster for 4 Clusters :  [8063 4908 1085 5944] |
+| GaussianMixture Silhouette Score for 4 Clusters :  0.167 |
+| Count of data points in each cluster for 5 Clusters :  [1213 8310 2543 4890 3044] |
+| GaussianMixture Silhouette Score for 5 Clusters :  0.146 |
+| Count of data points in each cluster for 6 Clusters :  [2552 4802  105 1225 6451 4865] |
+| GaussianMixture Silhouette Score for 6 Clusters :  0.156 |
+| Count of data points in each cluster for 7 Clusters :  [5630 1938 4110 4706 2371  203 1042] |
+| GaussianMixture Silhouette Score for 7 Clusters :  0.14 |
+| Count of data points in each cluster for 8 Clusters :  [  83 1239 4106 6262 1467 4890 1247  706] |
+| GaussianMixture Silhouette Score for 8 Clusters :  0.157 |
+| Count of data points in each cluster for 9 Clusters :  [1075 6155 1275 2890  894 2489 1623 2272 1327] |
+| GaussianMixture Silhouette Score for 9 Clusters :  0.135 |
+
+Gaussian Mixture Silhouette Score:  0.166
+
+![](images/gaussianMextureDist.png)
+
+### Models Evaluation
+
+| Model | Silhouette |
+| --- | --- |
+| kmeans     | 0.17  |
+| hierarchy  | 0.15  |
+| dbscan     | 0.45  |
+| gmm        | 0.166 |
+
+### Computation Time
 
 | Model | Time (in seconds) |
 | --- | --- |
-| kmeans | |
-| gmm | |
-| hierarchy | |
-| dbscan | |
+| kmeans | 0.87 |
+| gmm | 136.69 |
+| hierarchy | 63.97 |
+| dbscan | 11.54 |

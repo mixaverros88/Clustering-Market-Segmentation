@@ -24,7 +24,7 @@ elapsed_time = {"kmeans": [],"gmm": [] ,"hierarchy": [],"dbscan": [] } # Copute 
 missing_values = ['n/a', 'na', '--', '?'] # pandas only detect NaN, NA,  n/a and values and empty shell
 my_path = os.path.abspath(os.path.dirname(__file__))
 df=pd.read_csv(r''+my_path+'\\data\\USCensus1990.data.txt', sep=',', nrows=20000, na_values=missing_values)
-print('initial shape: ', df.shape) 
+print('Initial shape: ', df.shape) 
         
 # df=df.sample(frac=0.2, replace=True, random_state=1)
 displayBoxPlots(df, ['caseid','iRemplpar'])  # display box plots for every column
@@ -39,8 +39,8 @@ for index,group in groupedByUserId: # loop through every row and if a user a lea
     else:
         df.loc[ df['caseid']== index, 'military'] = 0
 
-# Print missing values
-print('Print missing values: ', df.isnull().values.sum())
+# Missing values
+print('Missing values: ', df.isnull().values.sum())
 
 df.drop('caseid', axis=1, inplace=True) 
 print('Count all the unique values before pre-processing: ', df.nunique().sum())
@@ -373,7 +373,7 @@ principal_cencus_Df.drop('cluster_dbscan',axis=1,inplace=True) # delete unneeded
 #################################################### Hierarchical clustering:Agglomerative Hierarchical Clustering #######################################################
 
 hiercluster = AgglomerativeClustering(affinity='euclidean', linkage='ward', compute_full_tree=True) # Create a hierarchical clustering model
-#findNumberOfClusterInHierarchical(hiercluster,[2,3,4],X) # run the model for several clusters 
+# findNumberOfClusterInHierarchical(hiercluster,[2,3,4],X) # run the model for several clusters 
 
 # Read off 8 clusters:
 hiercluster.set_params(n_clusters=3)
@@ -418,7 +418,7 @@ X_scaled_clustered2['cluster'] = clusters
 
 # Plot Parallel Coordinate plot for the Centroids
 means =  X_scaled_clustered2.groupby(by="cluster").mean()
-display_parallel_coordinates_centroids(means.reset_index(), 7)
+display_parallel_coordinates_centroids(means.reset_index(), 3)
 
 start_hierarchy = time.time()
 hierarchyPredictedLabels = hiercluster.fit_predict(X)
@@ -446,7 +446,7 @@ principal_cencus_Df.drop('cluster_hierarchy',axis=1,inplace=True) # delete unnee
 
 start_gmm = time.time()
 gmm = GaussianMixture()
-#findNumberOfClusterInGaussianMixture(gmm,[2,3,4,5,6,7,8,9],X)
+findNumberOfClusterInGaussianMixture(gmm,[2,3,4,5,6,7,8,9],X)
 gmm = GaussianMixture(n_components=3)
 labels = gmm.fit_predict(X)
 end_gmm = time.time()
