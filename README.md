@@ -17,8 +17,6 @@ Unique Values: 398
 
 ## Data preprocessing
 
-Another observation from the graph concerns the domains of the two variables Age and Income. We understand that the domain for Age is from around 20 to 70, whereas for Income it is from around 40,000 to over 300,000. Which points to a vast difference between the range of these values. Therefore, we must incorporate an important step in our analysis, and we must first standardize our data. Standardization is an important part of data preprocessing, which is why we’ve devoted the entire next paragraph precisely to this topic.
-
 Citizenship, Column Name: iCitizen
 | Initial | Converted |
 | --- | --- |
@@ -377,7 +375,7 @@ TODO: HOPKINS TEST
 
 ## Principal Components Analysis
 
-We perform PCA only for visuale perposes.
+We perform PCA only for visual purposes.
 
 ![](images/pcaVarianceRation.png)
 
@@ -417,8 +415,8 @@ KMEANS Silhouette Score:  0.17
 | Agglomerative Hierarchical Silhouette Score for 3 Clusters :  0.152 |
 | Count of data points in each cluster for 4 Clusters :  [6884 3438 8358 1320] |
 | Agglomerative Hierarchical Silhouette Score for 4 Clusters :  0.141 |
-| Count of data points in each cluster[4758 6884 8358] |
-| Agglomerative Hierarchical Silhouette Score from 3 clusters :  0.15 |
+| Count of data points in each cluster for 5 Clusters :  [4758 6884 8358] |
+| Agglomerative Hierarchical Silhouette Score from 5 clusters :  0.15 |
 
 | Find the size of each cluster |
 | --- |
@@ -434,10 +432,10 @@ Agglomerative Hierarchical Silhouette Score:  0.15
 
 ![](images/parallelCoordinatesHierarchical.png)
 
-## Dendogram
+## Dendrogram
  
 ![](images/dendogram.png)
-We cannot extract some information from dedogram , due to size of it.
+We cannot extract some information from dendrogram, due to size of it.
 
 ## DBSCAN
 
@@ -479,7 +477,7 @@ Size per cluster
 
 ![](images/dbscan.png)
 
-We observe that one class has all the observations, therefore we can assume that the dscan cannot perform good clustering.
+As we can observe from the table above the dbscan cannot distribute equally all the observations among the classes, since the class:0 has 19718 observers and the classes 1 and 2 has verry low observations , therefore we can assume that the dscan cannot perform good clustering for this dataset.
 
 ## Gaussian Mixture
 
@@ -490,7 +488,7 @@ We observe that one class has all the observations, therefore we can assume that
 | Count of data points in each cluster for 3 Clusters :  [6048 9044 4908] |
 | GaussianMixture Silhouette Score for 3 Clusters :  0.166 |
 | Count of data points in each cluster for 4 Clusters :  [8063 4908 1085 5944] |
-| GaussianMixture Silhouette Score for 4 Clusters :  0.167 |
+| GaussianMixture Silhouette Score for 4 Clusters :  0.165 |
 | Count of data points in each cluster for 5 Clusters :  [1213 8310 2543 4890 3044] |
 | GaussianMixture Silhouette Score for 5 Clusters :  0.146 |
 | Count of data points in each cluster for 6 Clusters :  [2552 4802  105 1225 6451 4865] |

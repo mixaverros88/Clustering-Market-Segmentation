@@ -239,6 +239,7 @@ displayBoxPlots(df)
 
 ########################################################################## Transform Categorical Data ##########################################################################
 
+print('Before Converting categorical variable into dummy/indicator variables: ', df.shape) 
 transformedDF = df.copy()
 for column in transformedDF:
     catLen = len(transformedDF[column].value_counts().index) # count the categorical values per column since is not need to convert the columns that has only 2 classes
@@ -446,7 +447,7 @@ principal_cencus_Df.drop('cluster_hierarchy',axis=1,inplace=True) # delete unnee
 
 start_gmm = time.time()
 gmm = GaussianMixture()
-findNumberOfClusterInGaussianMixture(gmm,[2,3,4,5,6,7,8,9],X)
+#findNumberOfClusterInGaussianMixture(gmm,[2,3,4,5,6,7,8,9],X)
 gmm = GaussianMixture(n_components=3)
 labels = gmm.fit_predict(X)
 end_gmm = time.time()
